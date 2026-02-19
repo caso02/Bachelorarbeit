@@ -1,0 +1,44 @@
+id,text,category
+1,"Just mass-upgraded our Kubernetes cluster to 1.29 – zero downtime! @devops_team https://k8s.io/blog",tech
+2,"Python 3.13 is finally here and the free-threaded mode is a game changer for concurrency",tech
+3,"Anyone else loving the new TypeScript 5.4 satisfies keyword? Makes type narrowing so clean",tech
+4,"Hot take: Rust will replace C++ in systems programming within 10 years @rustlang",tech
+5,"Our CI/CD pipeline went from 45 min to 8 min after switching to Bazel. Highly recommend! https://bazel.build",tech
+6,"New GPT-5 benchmark results are insane – 95% on MMLU. The AI race keeps accelerating",tech
+7,"Fine-tuned LLaMA 3 on our domain data and it outperforms GPT-4 on our specific tasks",tech
+8,"Docker Desktop alternatives: Podman, Colima, Rancher Desktop. Which one are you using?",tech
+9,"Real Madrid wins Champions League again! What a final 🏆 @ChampionsLeague",sports
+10,"Incredible performance by Djokovic at the Australian Open – 25th Grand Slam title!",sports
+11,"The NBA All-Star game was the most exciting in years. LeBron still got it at 41",sports
+12,"Marathon training update: just hit my first sub-3:30 half marathon! 🏃 https://strava.com/run123",sports
+13,"FIFA World Cup 2026 hype is real – can't wait for the US/Mexico/Canada edition ⚽",sports
+14,"Tour de France stage 15 was absolutely brutal. Pogacar is on another level this year",sports
+15,"Our local football club just got promoted to the first division! So proud @FC_local",sports
+16,"New study shows Mediterranean diet reduces heart disease risk by 30% https://health.org/study",health
+17,"Just finished a 30-day meditation challenge. My anxiety levels dropped significantly 🧘",health
+18,"PSA: Get your flu shots early this year. The new variant is spreading fast @WHO",health
+19,"Started intermittent fasting 16:8 two months ago – lost 5kg and feel more energetic",health
+20,"Mental health matters! If you're struggling, reach out. Resources: https://crisis-line.org",health
+21,"Sleep quality > sleep quantity. Best investment: blackout curtains + no screens 1h before bed",health
+22,"Yoga every morning for 6 months transformed my back pain. Wish I started earlier",health
+23,"Just watched Oppenheimer – Nolan outdid himself. The sound design is phenomenal 🎬",entertainment
+24,"New Beyoncé album dropped and it's already breaking streaming records @Spotify",entertainment
+25,"The Bear Season 3 is the best TV I've seen all year. Jeremy Allen White deserves every award",entertainment
+26,"Reading 'Project Hail Mary' by Andy Weir – best sci-fi since The Martian!",entertainment
+27,"Went to a local jazz festival this weekend. Live music hits different 🎵",entertainment
+28,"The new Zelda DLC is absolutely worth it. 40+ hours of new content",entertainment
+29,"Climate change report: 2025 was the hottest year on record globally 🌍 https://climate.nasa.gov",environment
+30,"Planted 50 trees in our community garden project today! Small steps matter 🌱 @GreenCity",environment
+31,"Solar panel installation is now cheaper than ever. Our electricity bill dropped 80%",environment
+32,"Microplastics found in 90% of bottled water brands. Time to switch to filtered tap water",environment
+33,"Electric vehicle sales surpassed gas cars in Norway for the third year running",environment
+34,"Our company just went carbon neutral! Offset + reduction strategy took 2 years @sustainability",environment
+35,"Bitcoin just hit $150k – is this the cycle top or just the beginning? 📈 @CryptoNews",finance
+36,"Best personal finance tip: automate your savings. Pay yourself first, always",finance
+37,"The housing market is finally cooling down. Mortgage rates dropping below 5% again",finance
+38,"Started investing in index funds 5 years ago – compound interest is truly magic 💰",finance
+39,"Inflation in the EU dropped to 1.8%. ECB considering rate cuts in Q2",finance
+40,"Side hustle update: my Etsy shop now makes more than my day job. Wild times.",finance
+41,"Remote work productivity study: hybrid (3 days office) shows best results https://hbr.org/study",tech
+42,"Just got my booster shot. Side effects lasted only one day this time 💉",health
+43,"Can't believe the plot twist in Succession finale. TV perfection @HBO",entertainment

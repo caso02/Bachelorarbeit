@@ -1,0 +1,53 @@
+model:
+  name: "sentence-transformers/all-MiniLM-L6-v2"
+  batch_size: 32
+
+data:
+  input_path: "data/raw/sample_posts.csv"
+  text_column: "text"
+  id_column: "id"
+  category_column: "category"
+  language_filter: null  # z.B. "en" oder "de", null = kein Filter
+
+preprocessing:
+  remove_urls: true
+  remove_mentions: true
+  lowercase: false
+  min_text_length: 5
+
+similarity:
+  query_index: 0
+  top_k: 5
+
+clustering:
+  methods:
+    - name: "kmeans"
+      params:
+        n_clusters: 5
+        random_state: 42
+
+    - name: "dbscan"
+      params:
+        metric: "cosine"
+      grid_search:
+        eps_values: [0.3, 0.4, 0.5, 0.6, 0.7, 0.8]
+        min_samples_values: [2, 3, 4, 5]
+
+    - name: "hdbscan"
+      params:
+        min_cluster_size: 3
+        min_samples: 2
+
+evaluation:
+  top_keywords: 5
+  representative_examples: 3
+
+output:
+  embeddings_path: "results/embeddings.npy"
+  ids_path: "results/embedding_ids.json"
+  metrics_path: "results/metrics.json"
+  clusters_path: "results/clusters.csv"
+  examples_path: "results/examples.md"
+  dbscan_grid_path: "results/dbscan_grid.csv"
+
+seed: 42
