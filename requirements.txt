@@ -4,3 +4,8 @@ numpy>=1.24.0
 pandas>=2.0.0
 pyyaml>=6.0
 hdbscan>=0.8.33
+google-genai
+matplotlib>=3.7.0
+seaborn>=0.12.0
+# crewai>=0.11.2 — nicht kompatibel mit Python 3.14 (Pydantic-v1-Konflikt)
+# community_crew.py implementiert eine äquivalente CrewAI-inspirierte Orchestrierungsschicht

@@ -1,13 +1,28 @@
 model:
-  name: "sentence-transformers/all-MiniLM-L6-v2"
-  batch_size: 32
+  # --- Backend-Wahl: Modellname bestimmt automatisch den Backend ---
+  # SBERT:  "sentence-transformers/all-MiniLM-L6-v2"  (kein API-Key nötig)
+  # Gemini: "gemini-embedding-2-preview"               (GOOGLE_API_KEY erforderlich)
+  name: "gemini-embedding-2-preview"
+  batch_size: 32  # nur für SBERT; bei Gemini ignoriert
+
+  # Gemini-spezifische Optionen (werden ignoriert wenn ein SBERT-Modell gewählt ist)
+  gemini:
+    api_key: null              # null = liest GOOGLE_API_KEY aus Umgebungsvariable
+    output_dimensionality: null  # null = volle 3072 Dims; z.B. 768 für Komprimierung
+    task_type: "CLUSTERING"    # CLUSTERING | SEMANTIC_SIMILARITY | RETRIEVAL_DOCUMENT
+
+# --- Modellvergleich (--compare) ---
+models:
+  - name: "sentence-transformers/all-MiniLM-L6-v2"
+  - name: "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+  - name: "sentence-transformers/all-mpnet-base-v2"
 
 data:
-  input_path: "data/raw/sample_posts.csv"
+  input_path: "data/raw/sample_posts_300.csv"
   text_column: "text"
   id_column: "id"
   category_column: "category"
-  language_filter: null  # z.B. "en" oder "de", null = kein Filter
+  language_filter: null
 
 preprocessing:
   remove_urls: true
@@ -19,11 +34,12 @@ similarity:
   query_index: 0
   top_k: 5
 
+# --- Flat-mode clustering (--mode flat) ---
 clustering:
   methods:
     - name: "kmeans"
       params:
-        n_clusters: 5
+        n_clusters: 6
         random_state: 42
 
     - name: "dbscan"
@@ -35,8 +51,81 @@ clustering:
 
     - name: "hdbscan"
       params:
-        min_cluster_size: 3
-        min_samples: 2
+        min_cluster_size: 5
+        min_samples: 3
+
+# --- Hierarchical-mode (--mode hierarchical, default) ---
+interest_labels:
+  tech:
+    - "software development, programming, and coding"
+    - "kubernetes, docker, and cloud infrastructure"
+    - "artificial intelligence, LLM, and machine learning"
+    - "web development with React, TypeScript, and frontend frameworks"
+    - "CI/CD pipelines, DevOps, and deployment automation"
+    - "databases, PostgreSQL, Redis, and data storage"
+    - "Python programming and backend development"
+    - "developer tools, GitHub Copilot, and IDE productivity"
+  sports:
+    - "football, soccer, Champions League, and Premier League"
+    - "tennis, Grand Slam tournaments, and ATP rankings"
+    - "marathon running, ultramarathon, and race training"
+    - "NBA basketball, All-Star game, and playoffs"
+    - "FIFA World Cup, international football, and national teams"
+    - "cycling, Tour de France, and bike racing"
+    - "Olympic Games, athletics, and world records"
+    - "fitness training, CrossFit, and gym workouts"
+  health:
+    - "sleep quality, insomnia, and circadian rhythm"
+    - "intermittent fasting, diet, and nutrition"
+    - "vaccines, flu shots, and mRNA technology"
+    - "mental health, anxiety, therapy, and meditation"
+    - "yoga, stretching, and physical recovery"
+    - "wearable health devices and biometric tracking"
+    - "supplements, vitamins, and longevity research"
+    - "exercise science, zone 2 cardio, and strength training"
+  entertainment:
+    - "movies, cinema, film directors, and award season"
+    - "TV shows, streaming series, and binge-watching"
+    - "music, albums, concerts, and vinyl records"
+    - "books, novels, sci-fi, and literary fiction"
+    - "video games, gaming, RPG, and esports"
+    - "podcasts, YouTube, and digital content creators"
+    - "theater, live comedy, and performing arts"
+    - "anime, manga, and Japanese entertainment"
+  environment:
+    - "climate change, global warming, and carbon emissions"
+    - "solar energy, wind power, and renewable electricity"
+    - "electric vehicles, EV adoption, and battery technology"
+    - "plastic pollution, recycling, and ocean cleanup"
+    - "tree planting, reforestation, and biodiversity"
+    - "sustainable agriculture, composting, and organic farming"
+    - "green building, passive house, and energy efficiency"
+    - "carbon capture, carbon credits, and climate policy"
+  finance:
+    - "bitcoin, cryptocurrency, and blockchain technology"
+    - "ETF, index funds, and passive investing"
+    - "inflation, interest rates, and central bank policy"
+    - "real estate, housing market, and mortgage rates"
+    - "personal finance, budgeting, and saving strategies"
+    - "stock market, S&P 500, and equity investing"
+    - "side hustle, freelancing, and entrepreneurship"
+    - "retirement planning, FIRE movement, and financial independence"
+
+hierarchical:
+  subcluster_method: "hdbscan"
+  subcluster_params:
+    min_cluster_size: 5
+    min_samples: 3
+  kmeans_fallback_k: 4
+  min_samples_for_hdbscan: 10
+
+stability:
+  enabled: false
+  n_runs: 10
+  seeds: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  subsample_ratio: 0.8
+  perturb_text: true
+  perturb_prob: 0.15
 
 evaluation:
   top_keywords: 5
@@ -49,5 +138,8 @@ output:
   clusters_path: "results/clusters.csv"
   examples_path: "results/examples.md"
   dbscan_grid_path: "results/dbscan_grid.csv"
+  routing_path: "results/routing.csv"
+  hierarchy_path: "results/hierarchy.csv"
+  proto_cache_dir: "results/proto_cache"
 
 seed: 42

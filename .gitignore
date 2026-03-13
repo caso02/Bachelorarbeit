@@ -1,11 +1,42 @@
+# Secrets
+.env
+
 # Python
 __pycache__/
 *.py[cod]
 *.egg-info/
 .venv/
+venv/
 
-# Embeddings / large binary files
+# Large binary / generated files
 results/embeddings.npy
+results/eval_compare/
+results/figures/
+results/proto_cache/
+results/stability_runs/
+results/model_comparison/
+*.png
+
+# Runtime-Ergebnisse (werden bei jedem Lauf neu generiert)
+results/crew_posts.json
+results/crew_analysis.json
+results/crew_nudges.json
+results/final_nudges.json
+results/clusters.csv
+results/dbscan_grid.csv
+results/embedding_ids.json
+results/examples.md
+results/hierarchy.csv
+results/metrics.json
+results/routing.csv
+results/routing_confusion.csv
+results/stability_per_topic.csv
+results/stability_summary.json
+results/model_comparison_summary.csv
+results/comparison_table.csv
+results/comparison_table.md
+results/stability_report.md
+results/ethics_reviews/
 
 # IDE
 .vscode/
