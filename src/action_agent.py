@@ -14,9 +14,10 @@ from __future__ import annotations
 
 import json
 import os
-import re
 from pathlib import Path
 from typing import Optional
+
+from src.utils import load_dotenv, parse_llm_json, get_gemini_client, call_gemini_with_retry
 
 
 # ---------------------------------------------------------------------------
@@ -61,8 +62,7 @@ class ActionAgent:
         self.model_name = model_name
         self.readiness_threshold = readiness_threshold
 
-        # Load .env from project root (same pattern as run_pipeline.py)
-        _load_dotenv()
+        load_dotenv()
 
         self._api_key = api_key or os.environ.get("GOOGLE_API_KEY")
         if not self._api_key:
@@ -140,11 +140,79 @@ class ActionAgent:
             "n_eligible": len(eligible),
         }
 
+    def regenerate_nudge(
+        self,
+        cluster_data: dict,
+        top_posts: list[dict],
+        previous_nudge_text: str,
+        ethics_feedback: str,
+    ) -> dict:
+        """Regenerate a nudge incorporating Ethics-Agent feedback.
+
+        This method is called during the Coordinator's feedback loop when
+        the Ethics-Agent has REJECTED a nudge. The prompt includes the
+        previous attempt and the rejection reasoning so the LLM can produce
+        an improved version.
+
+        Args:
+            cluster_data: Cluster metadata (same as in generate_community_nudge).
+            top_posts: Original eligible posts for context.
+            previous_nudge_text: The nudge text that was rejected.
+            ethics_feedback: The Ethics-Agent's reasoning for rejection.
+
+        Returns:
+            Dict with the same structure as generate_community_nudge output.
+        """
+        # Use all posts (no readiness re-filtering — they were already filtered)
+        eligible = top_posts or []
+
+        if not eligible:
+            return {
+                "nudge_text": None,
+                "explanation": "Keine Posts für Regeneration verfügbar.",
+                "target_user_ids": [],
+                "cluster_context": cluster_data,
+                "n_eligible": 0,
+            }
+
+        print(f"  ↳ Regeneriere Nudge mit Ethics-Feedback...")
+
+        revision_context = {
+            "previous_attempt": previous_nudge_text,
+            "rejection_reason": ethics_feedback,
+        }
+        prompt = self._build_prompt(cluster_data, eligible, revision_context=revision_context)
+        raw_response = self._call_gemini(prompt)
+        parsed = self._parse_json(raw_response)
+
+        return {
+            "nudge_text": parsed.get("nudge_text"),
+            "explanation": parsed.get("explanation", ""),
+            "target_user_ids": [p["id"] for p in eligible if "id" in p],
+            "cluster_context": cluster_data,
+            "n_eligible": len(eligible),
+        }
+
     # ------------------------------------------------------------------
     # Internal helpers
     # ------------------------------------------------------------------
 
-    def _build_prompt(self, cluster_data: dict, eligible_posts: list[dict]) -> str:
+    def _build_prompt(
+        self,
+        cluster_data: dict,
+        eligible_posts: list[dict],
+        revision_context: dict | None = None,
+    ) -> str:
+        """Build the LLM prompt for nudge generation.
+
+        Args:
+            cluster_data: Cluster metadata.
+            eligible_posts: Posts above readiness threshold.
+            revision_context: Optional dict with ``previous_attempt`` and
+                ``rejection_reason`` for the feedback-loop. When provided,
+                the prompt instructs the model to improve the previous
+                attempt based on the Ethics-Agent's criticism.
+        """
         topic = cluster_data.get("topic_label", "unbekannt")
         subcluster = cluster_data.get("subcluster_id", "?")
         n_total = cluster_data.get("n_posts", len(eligible_posts))
@@ -166,73 +234,34 @@ class ActionAgent:
             "=== Ausgewählte Beiträge (hohe Community-Bereitschaft) ===",
         ]
         for i, post in enumerate(eligible_posts, 1):
-            lines.append(f"Beitrag {i}: {post['text_clean']}")
+            lines.append(f"Beitrag {i}: {post.get('text_clean', post.get('text', ''))}")
 
-        lines += [
-            "",
-            "Generiere jetzt den Vernetzungsvorschlag gemäss den VSD-Richtlinien.",
-        ]
+        # --- Revision-Context (Feedback-Loop) ---
+        if revision_context:
+            lines += [
+                "",
+                "=== REVISION — Vorheriger Versuch wurde abgelehnt ===",
+                f"Abgelehnter Vorschlag: {revision_context['previous_attempt']}",
+                f"Ablehnungsgrund (Ethics-Agent): {revision_context['rejection_reason']}",
+                "",
+                "WICHTIG: Generiere einen NEUEN Vorschlag, der die obige Kritik "
+                "vollständig berücksichtigt. Vermeide dieselben Fehler. "
+                "Halte dich strikt an die VSD-Richtlinien.",
+            ]
+        else:
+            lines += [
+                "",
+                "Generiere jetzt den Vernetzungsvorschlag gemäss den VSD-Richtlinien.",
+            ]
+
         return "\n".join(lines)
 
     def _call_gemini(self, prompt: str) -> str:
-        try:
-            from google import genai
-        except ImportError as e:
-            raise ImportError(
-                "google-genai ist nicht installiert. "
-                "Bitte ausführen: pip install google-genai"
-            ) from e
-
-        client = genai.Client(api_key=self._api_key)
-        response = client.models.generate_content(
-            model=self.model_name,
-            contents=prompt,
-        )
-        return response.text
+        client = get_gemini_client(api_key=self._api_key)
+        return call_gemini_with_retry(client, self.model_name, prompt)
 
     @staticmethod
     def _parse_json(raw: str) -> dict:
         """Extract JSON from the model response, with a plain-text fallback."""
-        # Try full parse first
-        try:
-            return json.loads(raw.strip())
-        except json.JSONDecodeError:
-            pass
+        return parse_llm_json(raw, fallback_keys={"nudge_text": "", "explanation": ""})
 
-        # Strip markdown code fences if present
-        stripped = re.sub(r"```(?:json)?\s*", "", raw).strip().rstrip("`")
-        try:
-            return json.loads(stripped)
-        except json.JSONDecodeError:
-            pass
-
-        # Extract first {...} block
-        match = re.search(r"\{.*\}", raw, re.DOTALL)
-        if match:
-            try:
-                return json.loads(match.group())
-            except json.JSONDecodeError:
-                pass
-
-        # Last resort: wrap raw text
-        return {"nudge_text": raw.strip(), "explanation": ""}
-
-
-# ---------------------------------------------------------------------------
-# .env loader (no python-dotenv dependency)
-# ---------------------------------------------------------------------------
-
-def _load_dotenv(env_path: str | Path | None = None) -> None:
-    """Load KEY=VALUE pairs from a .env file into os.environ."""
-    path = Path(env_path) if env_path else Path(__file__).parent.parent / ".env"
-    if not path.exists():
-        return
-    for line in path.read_text().splitlines():
-        line = line.strip()
-        if not line or line.startswith("#") or "=" not in line:
-            continue
-        key, _, value = line.partition("=")
-        key = key.strip()
-        value = value.strip().strip('"').strip("'")
-        if key and key not in os.environ:
-            os.environ[key] = value

@@ -1,43 +1,85 @@
 {
-  "kmeans": {
-    "silhouette": 0.016,
-    "davies_bouldin": 3.2963,
-    "n_clusters": 5,
-    "noise_points": 0,
-    "weak_label": {
-      "nmi": 0.3749,
-      "ari": 0.1902,
-      "purity": 0.4884,
-      "purity_including_noise": 0.4884,
-      "n_evaluated": 43
-    }
+  "stage1_routing": {
+    "accuracy_at_1": 0.97,
+    "accuracy_at_2": 0.9967,
+    "n_posts": 300,
+    "per_category": {
+      "entertainment": {
+        "n": 50,
+        "accuracy_at_1": 0.94
+      },
+      "environment": {
+        "n": 50,
+        "accuracy_at_1": 1.0
+      },
+      "finance": {
+        "n": 50,
+        "accuracy_at_1": 0.96
+      },
+      "health": {
+        "n": 50,
+        "accuracy_at_1": 1.0
+      },
+      "sports": {
+        "n": 50,
+        "accuracy_at_1": 0.92
+      },
+      "tech": {
+        "n": 50,
+        "accuracy_at_1": 1.0
+      }
+    },
+    "weak_label_nmi": 0.9265,
+    "weak_label_ari": 0.9287
   },
-  "dbscan": {
-    "silhouette": 0.2087,
-    "davies_bouldin": 0.9365,
-    "n_clusters": 3,
-    "noise_points": 37,
-    "best_eps": 0.6,
-    "best_min_samples": 2,
-    "weak_label": {
-      "nmi": 0.2165,
-      "ari": 0.0041,
-      "purity": 1.0,
-      "purity_including_noise": 0.3023,
-      "n_evaluated": 6
-    }
-  },
-  "hdbscan": {
-    "silhouette": 0.0397,
-    "davies_bouldin": 3.0978,
-    "n_clusters": 2,
-    "noise_points": 20,
-    "weak_label": {
-      "nmi": 0.4179,
-      "ari": 0.2231,
-      "purity": 0.5652,
-      "purity_including_noise": 0.4651,
-      "n_evaluated": 23
+  "stage2_clustering": {
+    "entertainment": {
+      "silhouette": 0.0452,
+      "davies_bouldin": 2.9247,
+      "n_clusters": 4,
+      "noise_points": 0,
+      "n_posts": 47,
+      "method_used": "kmeans_fallback"
+    },
+    "environment": {
+      "silhouette": 0.0463,
+      "davies_bouldin": 2.8407,
+      "n_clusters": 4,
+      "noise_points": 0,
+      "n_posts": 52,
+      "method_used": "kmeans_fallback"
+    },
+    "finance": {
+      "silhouette": 0.0341,
+      "davies_bouldin": 3.2832,
+      "n_clusters": 4,
+      "noise_points": 0,
+      "n_posts": 49,
+      "method_used": "kmeans_fallback"
+    },
+    "health": {
+      "silhouette": 0.0299,
+      "davies_bouldin": 3.2748,
+      "n_clusters": 4,
+      "noise_points": 0,
+      "n_posts": 53,
+      "method_used": "kmeans_fallback"
+    },
+    "sports": {
+      "silhouette": 0.0803,
+      "davies_bouldin": 2.376,
+      "n_clusters": 2,
+      "noise_points": 29,
+      "n_posts": 46,
+      "method_used": "hdbscan"
+    },
+    "tech": {
+      "silhouette": 0.1081,
+      "davies_bouldin": 2.1207,
+      "n_clusters": 3,
+      "noise_points": 30,
+      "n_posts": 53,
+      "method_used": "hdbscan"
     }
   }
 }

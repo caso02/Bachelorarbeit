@@ -1,27 +1,56 @@
-# SBERT Social-Media-Post Analyse
+# Social AI — Community OODA-Loop (ZHAW Bachelorarbeit 2026)
 
-Sentence-BERT Pipeline für Similarity Search, Clustering und Evaluation von Social-Media-Posts.
+Autonomes Multi-Agent-System zur semantischen Analyse von Social-Media-Posts und ethisch gestalteter Community-Vernetzung.
+
+## Architektur
+
+Das System implementiert einen **OODA-Loop** (Observe-Orient-Decide-Act) als CrewAI-inspiriertes Multi-Agent-Framework:
+
+```
+Observe  → Collector Agent     Daten sammeln (Reddit / Kaggle / Mock)
+Orient   → Analysis Agent      Gemini Embeddings, Topic-Routing, Clustering, Readiness-Scores
+Decide   → Action Agent        Ethische Vernetzungsvorschläge (Nudges) generieren
+Act      → Ethics Agent        Responsible-AI-Prüfung → APPROVED / REVISED / REJECTED
+```
+
+Die Orchestrierung erfolgt über eine leichtgewichtige, dependency-freie Abstraktion (`Agent`, `Task`, `Crew`), die CrewAI-Konzepte nachbildet (CrewAI 0.11.2 ist nicht mit Python 3.14 kompatibel).
+
+### Value-Sensitive Design (VSD)
+
+- **Unaufdringlich** — keine FOMO-Sprache, kein Druck
+- **Transparent** — jeder Vorschlag enthält eine ehrliche Begründung
+- **Autonomieerhaltend** — Nutzer entscheidet frei
+- **Privatsphäre** — Usernamen werden SHA-256-pseudonymisiert, nie im Klartext gespeichert
 
 ## Projektstruktur
 
 ```
 ├── configs/
-│   └── config.yaml          # Zentrale Konfiguration
+│   └── config.yaml              # Zentrale Konfiguration
 ├── data/
-│   ├── raw/
-│   │   └── sample_posts.csv  # Beispiel-Dataset (~43 Posts, 6 Kategorien)
-│   └── processed/
-├── results/                   # Outputs der Pipeline
+│   ├── raw/sample_posts_300.csv  # Mock-Dataset (300 Posts, 6 Kategorien)
+│   └── kaggle/                   # Optional: Kaggle Reddit CSV
+├── results/                      # Pipeline-Outputs (JSON, CSV, Plots)
 ├── scripts/
-│   └── run_pipeline.py        # CLI Entry Point
+│   └── run_pipeline.py           # Klassische Analyse-Pipeline (CLI)
 ├── src/
-│   ├── preprocess.py          # Text laden & bereinigen
-│   ├── embed.py               # Sentence-BERT Embeddings + Caching
-│   ├── similarity.py          # Cosine-Similarity Top-k Suche
-│   ├── cluster.py             # KMeans, DBSCAN (+ Grid Search), HDBSCAN
-│   ├── evaluate.py            # Metriken + TF-IDF Keywords + Weak-Label Eval
-│   └── report.py              # JSON/CSV/Markdown Reports
+│   ├── community_crew.py         # OODA-Loop Orchestrierung
+│   ├── app.py                    # Streamlit Dashboard (OODA-Visualisierung + Nudge-Review)
+│   ├── universal_collector.py    # Datensammlung (Reddit → Kaggle → Mock)
+│   ├── embed.py                  # Gemini / SBERT Embeddings (Batch, Cache)
+│   ├── routing.py                # Topic-Routing via Prototyp-Embeddings
+│   ├── hierarchical.py           # HDBSCAN / KMeans Subclustering
+│   ├── action_agent.py           # Nudge-Generierung (Gemini LLM + VSD)
+│   ├── ethics_agent.py           # Responsible-AI-Prüfung (APPROVED / REVISED / REJECTED)
+│   ├── agent_state.py            # In-Memory Inter-Agent-Kommunikation
+│   ├── utils.py                  # Shared Utilities (.env, JSON-Parsing, Client-Cache)
+│   ├── evaluate.py               # Metriken, TF-IDF, MRL-Truncation
+│   ├── cluster.py                # KMeans, DBSCAN, HDBSCAN
+│   ├── report.py                 # JSON/CSV/Markdown Reports
+│   └── visualize.py              # t-SNE Plots
+├── tests/                        # Unit-Tests (pytest)
 ├── requirements.txt
+├── .env.example                  # Template für Umgebungsvariablen
 └── README.md
 ```
 
@@ -31,102 +60,86 @@ Sentence-BERT Pipeline für Similarity Search, Clustering und Evaluation von Soc
 
 ```bash
 # 1. Virtual Environment erstellen
-python3 -m venv .venv
-source .venv/bin/activate
+python3 -m venv venv
+source venv/bin/activate
 
 # 2. Dependencies installieren
 pip install -r requirements.txt
+
+# 3. Umgebungsvariablen konfigurieren
+cp .env.example .env
+# .env editieren: GOOGLE_API_KEY eintragen (Pflicht)
+# Optional: REDDIT_CLIENT_ID, REDDIT_CLIENT_SECRET für Live-Daten
 ```
 
 ## Quickstart
 
+### Streamlit Dashboard (empfohlen)
+
 ```bash
-# Pipeline ausführen (Default-Config)
+streamlit run src/app.py
+```
+
+Öffnet ein interaktives Dashboard mit:
+- Keyword-Suche für Topic-Filterung
+- Schrittweiser OODA-Loop Ausführung mit Live-Status
+- **Community Nudges** mit Ethics-Badge (APPROVED / REVISED / REJECTED)
+  - Tab "Begründung & Ethik": VSD-Erklärung + Responsible-AI-Reasoning
+  - Tab "Analysierte Posts": alle Posts des Clusters mit Readiness-Kennzeichnung (🔥 vernetzungsbereit)
+  - Cluster-Stärke: Gesamtposts vs. hochgradig vernetzungsbereite Posts
+- **Technical Analytics**: t-SNE Cluster-Plot, Readiness-Heatmap, Cluster-Tabelle
+
+### CLI (OODA-Loop)
+
+```bash
+python src/community_crew.py --query "health"
+```
+
+### Klassische Analyse-Pipeline
+
+```bash
 python scripts/run_pipeline.py --config configs/config.yaml
 ```
 
-### Outputs
+## Tests
+
+```bash
+pip install pytest
+python -m pytest tests/ -v
+```
+
+## Datenquellen (Prioritäts-Fallback)
+
+| Modus | Bedingung | Beschreibung |
+|-------|-----------|--------------|
+| 🟢 Reddit API | `REDDIT_CLIENT_ID` in `.env` | Live-Suche via praw |
+| 🟡 Kaggle CSV | `data/kaggle/reddit_data.csv` vorhanden | Statische Reddit-Daten |
+| 🔴 Mock-Fallback | Immer verfügbar | 300 synthetische Posts |
+
+## Pipeline-Outputs
 
 | Datei | Beschreibung |
-|---|---|
-| `results/metrics.json` | Silhouette, Davies-Bouldin, NMI, ARI, Purity pro Methode |
-| `results/clusters.csv` | Post-IDs mit Cluster-Zuordnungen aller Methoden |
-| `results/examples.md` | Top-Keywords (Uni-/Bigrams) und repräsentative Beispiele pro Cluster |
-| `results/dbscan_grid.csv` | DBSCAN Grid-Search-Ergebnisse (alle Kombinationen) |
-| `results/embeddings.npy` | Gecachte Embeddings (werden beim nächsten Lauf wiederverwendet) |
+|-------|--------------|
+| `results/crew_posts.json` | Gesammelte Posts mit Metadaten |
+| `results/crew_analysis.json` | Cluster mit Readiness-Scores |
+| `results/hierarchy.csv` | Post-Cluster-Zuordnungen |
+| `results/crew_nudges.json` | Generierte Nudges (vor Ethics-Review) |
+| `results/final_nudges.json` | Freigegebene Nudges (nur APPROVED/REVISED) |
+| `results/ethics_reviews/` | Einzelne Ethics-Review-Protokolle |
+| `results/cluster_plot.png` | t-SNE Visualisierung |
 
 ## Konfiguration
 
 Alle Parameter werden über `configs/config.yaml` gesteuert:
 
-- **model.name** – Sentence-Transformer Modellname (Default: `all-MiniLM-L6-v2`)
-- **preprocessing** – URL/Mention-Entfernung, Lowercase, Min-Textlänge
-- **clustering.methods** – Liste von Methoden mit Parametern
-- **similarity.query_index** – Index des Abfrage-Posts für die Top-k Suche
-- **data.language_filter** – Optional: z.B. `"en"` (benötigt `pip install langdetect`)
-- **data.category_column** – Name der Weak-Label-Spalte (aktiviert NMI/ARI/Purity)
-
-## DBSCAN Parameter-Tuning (Grid Search)
-
-Statt feste DBSCAN-Parameter zu wählen, kann eine automatische Grid Search konfiguriert werden.
-In `config.yaml` unter der DBSCAN-Methode:
-
-```yaml
-- name: "dbscan"
-  params:
-    metric: "cosine"
-  grid_search:
-    eps_values: [0.15, 0.20, 0.25, 0.30, 0.35]
-    min_samples_values: [3, 4, 5]
-```
-
-### Wie funktioniert es?
-
-1. Alle Kombinationen aus `eps_values × min_samples_values` werden durchprobiert.
-2. Für jede Kombination werden Silhouette-Score, Davies-Bouldin, Cluster-Anzahl und Noise-Punkte berechnet.
-3. Die **beste Kombination** wird automatisch gewählt (höchster Silhouette; Tie-Breaker: weniger Noise, dann moderatere Cluster-Anzahl).
-4. Diese Best-Kombi wird als DBSCAN-Ergebnis in `clusters.csv` und `examples.md` verwendet.
-
-### `results/dbscan_grid.csv` lesen
-
-| Spalte | Bedeutung |
-|---|---|
-| `eps` | Getesteter eps-Wert |
-| `min_samples` | Getesteter min_samples-Wert |
-| `n_clusters` | Anzahl gefundener Cluster (ohne Noise) |
-| `n_noise` | Anzahl als Noise klassifizierter Punkte |
-| `silhouette` | Silhouette-Score (null wenn < 2 Cluster) |
-| `davies_bouldin` | Davies-Bouldin-Index (null wenn < 2 Cluster) |
-
-Ohne `grid_search`-Block verwendet die Pipeline die festen `params` wie bisher.
-
-## Weak-Label Evaluation
-
-Falls die Daten eine `category`-Spalte enthalten (konfigurierbar via `data.category_column`),
-berechnet die Pipeline automatisch:
-
-| Metrik | Beschreibung |
-|---|---|
-| **NMI** | Normalized Mutual Information zwischen Clustering und Kategorien |
-| **ARI** | Adjusted Rand Index |
-| **Purity** | Anteil korrekt zugeordneter Punkte (Noise ignoriert) |
-| **Purity (inkl. Noise)** | Wie Purity, aber Noise-Punkte als eigene Gruppe |
-
-Diese Metriken erscheinen unter `weak_label` pro Methode in `results/metrics.json`.
-
-## Modell austauschen
-
-In `config.yaml` einfach den Modellnamen ändern und den Embedding-Cache löschen:
-
-```bash
-rm results/embeddings.npy results/embedding_ids.json
-# config.yaml anpassen, z.B.:
-# model.name: "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
-python scripts/run_pipeline.py
-```
+- **model.name** — Embedding-Modell (`gemini-embedding-2-preview` oder SBERT)
+- **interest_labels** — Topic-Kategorien mit Seed-Sätzen für Routing
+- **hierarchical** — HDBSCAN/KMeans Parameter für Subclustering
+- **preprocessing** — Text-Bereinigung, Min-Textlänge
+- **output** — Pfade für Cache und Ergebnisse
 
 ## Reproduzierbarkeit
 
-- Fester Random Seed (konfigurierbar via `seed` in config.yaml)
 - Embeddings werden gecacht (`results/embeddings.npy` + `results/embedding_ids.json`)
-- Bei gleichen Daten + gleichem Modell → identische Ergebnisse
+- Label-Prototypen gecacht (`results/proto_cache/`)
+- Fester Random Seed für Clustering und t-SNE

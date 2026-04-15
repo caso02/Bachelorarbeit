@@ -1,44 +1,301 @@
 id,text_clean,category,kmeans,dbscan,hdbscan
-1,Just mass-upgraded our Kubernetes cluster to 1.29 – zero downtime!,tech,4,-1,0
-2,Python 3.13 is finally here and the free-threaded mode is a game changer for concurrency,tech,4,-1,-1
-3,Anyone else loving the new TypeScript 5.4 satisfies keyword? Makes type narrowing so clean,tech,2,-1,-1
-4,Hot take: Rust will replace C++ in systems programming within 10 years,tech,4,-1,-1
-5,Our CI/CD pipeline went from 45 min to 8 min after switching to Bazel. Highly recommend!,tech,4,-1,-1
-6,New GPT-5 benchmark results are insane – 95% on MMLU. The AI race keeps accelerating,tech,2,0,0
-7,Fine-tuned LLaMA 3 on our domain data and it outperforms GPT-4 on our specific tasks,tech,2,0,-1
-8,"Docker Desktop alternatives: Podman, Colima, Rancher Desktop. Which one are you using?",tech,4,-1,-1
-9,Real Madrid wins Champions League again! What a final 🏆,sports,3,-1,0
-10,Incredible performance by Djokovic at the Australian Open – 25th Grand Slam title!,sports,2,-1,0
-11,The NBA All-Star game was the most exciting in years. LeBron still got it at 41,sports,4,-1,0
-12,Marathon training update: just hit my first sub-3:30 half marathon! 🏃,sports,4,-1,0
-13,FIFA World Cup 2026 hype is real – can't wait for the US/Mexico/Canada edition ⚽,sports,3,-1,0
-14,Tour de France stage 15 was absolutely brutal. Pogacar is on another level this year,sports,0,-1,0
-15,Our local football club just got promoted to the first division! So proud,sports,4,-1,0
-16,New study shows Mediterranean diet reduces heart disease risk by 30%,health,0,-1,-1
-17,Just finished a 30-day meditation challenge. My anxiety levels dropped significantly 🧘,health,0,-1,0
-18,PSA: Get your flu shots early this year. The new variant is spreading fast,health,2,1,0
-19,Started intermittent fasting 16:8 two months ago – lost 5kg and feel more energetic,health,0,-1,-1
-20,"Mental health matters! If you're struggling, reach out. Resources:",health,0,-1,-1
-21,Sleep quality > sleep quantity. Best investment: blackout curtains + no screens 1h before bed,health,1,-1,-1
-22,Yoga every morning for 6 months transformed my back pain. Wish I started earlier,health,0,-1,0
-23,Just watched Oppenheimer – Nolan outdid himself. The sound design is phenomenal 🎬,entertainment,2,-1,-1
-24,New Beyoncé album dropped and it's already breaking streaming records,entertainment,2,-1,-1
-25,The Bear Season 3 is the best TV I've seen all year. Jeremy Allen White deserves every award,entertainment,2,-1,-1
-26,Reading 'Project Hail Mary' by Andy Weir – best sci-fi since The Martian!,entertainment,0,-1,-1
-27,Went to a local jazz festival this weekend. Live music hits different 🎵,entertainment,4,-1,-1
-28,The new Zelda DLC is absolutely worth it. 40+ hours of new content,entertainment,2,-1,-1
-29,Climate change report: 2025 was the hottest year on record globally 🌍,environment,3,-1,0
-30,Planted 50 trees in our community garden project today! Small steps matter 🌱,environment,4,-1,-1
-31,Solar panel installation is now cheaper than ever. Our electricity bill dropped 80%,environment,3,-1,1
-32,Microplastics found in 90% of bottled water brands. Time to switch to filtered tap water,environment,3,-1,-1
-33,Electric vehicle sales surpassed gas cars in Norway for the third year running,environment,1,-1,-1
-34,Our company just went carbon neutral! Offset + reduction strategy took 2 years,environment,4,-1,0
-35,Bitcoin just hit $150k – is this the cycle top or just the beginning? 📈,finance,3,-1,1
-36,"Best personal finance tip: automate your savings. Pay yourself first, always",finance,3,-1,1
-37,The housing market is finally cooling down. Mortgage rates dropping below 5% again,finance,3,2,1
-38,Started investing in index funds 5 years ago – compound interest is truly magic 💰,finance,3,-1,1
-39,Inflation in the EU dropped to 1.8%. ECB considering rate cuts in Q2,finance,3,2,1
-40,Side hustle update: my Etsy shop now makes more than my day job. Wild times.,finance,1,-1,1
-41,Remote work productivity study: hybrid (3 days office) shows best results,tech,1,-1,1
-42,Just got my booster shot. Side effects lasted only one day this time 💉,health,0,1,0
-43,Can't believe the plot twist in Succession finale. TV perfection,entertainment,3,-1,-1
+1,Upgraded our Kubernetes cluster to 1.30 – zero-downtime rolling update worked flawlessly,tech,2,-1,0
+2,Python 3.13 free-threaded mode is a game changer for concurrent web scrapers,tech,2,-1,-1
+3,TypeScript 5.5 satisfies keyword makes generic inference so much cleaner,tech,2,-1,-1
+4,Hot take: Rust will dominate systems programming within a decade,tech,2,-1,-1
+5,Our CI/CD pipeline dropped from 40 min to 6 min after migrating to Bazel,tech,2,-1,-1
+6,GPT-5 scores 96% on MMLU – the frontier model race keeps accelerating,tech,5,-1,-1
+7,Fine-tuned LLaMA 3.1 on our domain corpus and it outperforms GPT-4 on internal benchmarks,tech,2,-1,0
+8,Docker Desktop alternatives: Podman vs Colima vs Rancher Desktop – which do you prefer?,tech,2,-1,-1
+9,Deployed a multi-region Kubernetes setup on AWS EKS – latency dropped 60%,tech,2,-1,0
+10,React Server Components finally make sense after reading the new RFC,tech,2,-1,-1
+11,PostgreSQL 17 brings incremental backup and better JSON support,tech,2,-1,-1
+12,GitHub Copilot now suggests entire test suites – pair programming is evolving fast,tech,2,-1,0
+13,Switched from REST to gRPC for internal microservices – throughput tripled,tech,2,-1,-1
+14,The new Tailwind v4 engine is blazingly fast compared to v3,tech,2,-1,-1
+15,Our RAG pipeline with LangChain and Pinecone retrieves answers in under 200ms,tech,2,-1,0
+16,Terraform vs Pulumi for IaC – we switched to Pulumi and love the TypeScript support,tech,2,-1,-1
+17,OpenAI's function calling API makes tool-use agents surprisingly easy to build,tech,2,-1,-1
+18,Migrated our monolith to microservices on Kubernetes – lessons learned after 6 months,tech,2,-1,0
+19,Next.js 15 App Router finally feels stable enough for production,tech,2,-1,-1
+20,Redis is adding vector search – could replace dedicated vector DBs for small use cases,tech,2,-1,0
+21,Claude 4 Opus is incredible for complex coding tasks – context window is the real killer feature,tech,3,-1,-1
+22,Set up Prometheus + Grafana for cluster monitoring – dashboards in 30 minutes,tech,2,-1,-1
+23,WebAssembly in the browser is making near-native speed accessible to web apps,tech,2,-1,-1
+24,Our ML inference pipeline runs on ONNX Runtime – 3x faster than PyTorch,tech,2,-1,-1
+25,Astro framework is perfect for content-heavy sites – ships zero JS by default,tech,2,-1,-1
+26,Trying Bun as a Node.js replacement – startup time is impressive,tech,2,-1,-1
+27,ArgoCD for GitOps deployment is a massive improvement over manual kubectl applies,tech,2,-1,0
+28,DuckDB for local analytics is shockingly fast – processed 10M rows in seconds,tech,2,-1,-1
+29,GitHub Actions reusable workflows saved us hundreds of lines of YAML,tech,2,-1,-1
+30,The AI coding assistant space is heating up – Copilot vs Cursor vs Cody,tech,2,-1,-1
+31,FastAPI with Pydantic v2 is the fastest Python API framework I've used,tech,2,-1,-1
+32,Helm charts are great until you have 50 microservices – we switched to Kustomize,tech,2,-1,0
+33,Svelte 5 runes make reactivity explicit – big improvement over stores,tech,2,-1,-1
+34,Our vector DB comparison: Pinecone vs Weaviate vs Qdrant for semantic search,tech,2,-1,0
+35,LLM fine-tuning with QLoRA on a single A100 – surprisingly affordable,tech,2,-1,-1
+36,Kubernetes HPA autoscaling saved us 40% on cloud costs this quarter,tech,2,-1,0
+37,Deno 2.0 has Node compatibility – might finally see wider adoption,tech,2,-1,-1
+38,The SQLite renaissance is real – embedded DBs are making a huge comeback,tech,2,-1,-1
+39,Grafana Loki for log aggregation is much simpler than the ELK stack,tech,2,-1,-1
+40,Anthropic's constitutional AI approach produces noticeably safer outputs,tech,3,-1,-1
+41,Built a real-time feature store with Apache Kafka and Redis – sub-10ms latency,tech,2,-1,0
+42,Golang generics still feel limited compared to Rust's trait system,tech,2,-1,-1
+43,Nix for reproducible dev environments is worth the steep learning curve,tech,2,-1,0
+44,SolidJS performance benchmarks blow React out of the water,tech,2,-1,-1
+45,Our team standardized on pre-commit hooks – code quality improved overnight,tech,2,-1,-1
+46,Mixtral 8x7B MoE model runs surprisingly well on consumer hardware,tech,2,-1,-1
+47,Switched from Jira to Linear – the speed difference is night and day,tech,0,-1,-1
+48,HTMX is proving that you don't need heavy JS frameworks for interactive UIs,tech,2,-1,-1
+49,Backstage by Spotify is transforming our developer portal experience,tech,2,-1,1
+50,Embeddings-based search replaced our Elasticsearch setup for product discovery,tech,2,-1,-1
+51,Real Madrid wins the Champions League final in dramatic penalty shootout,sports,5,-1,4
+52,Djokovic claims his 26th Grand Slam title at the Australian Open,sports,5,-1,-1
+53,The NBA All-Star game delivered the most exciting finish in a decade,sports,5,-1,4
+54,Completed my first sub-3:30 marathon after 16 weeks of structured training,sports,5,0,4
+55,FIFA World Cup 2026 preparations in full swing across North America,sports,5,-1,-1
+56,Tour de France Stage 18: Pogacar extends his lead with an incredible mountain attack,sports,5,-1,-1
+57,Our local football club earned promotion to the first division – what a season!,sports,5,-1,-1
+58,Simone Biles wins her 6th Olympic gold – greatest gymnast of all time,sports,5,-1,-1
+59,Premier League title race is the tightest it's been in years – three teams within 2 points,sports,5,-1,4
+60,Ran my first ultramarathon (50km) – the mental game after km 35 is brutal,sports,5,1,4
+61,Liverpool's pressing system under the new coach is relentless and effective,sports,5,-1,-1
+62,Tennis: the Next Gen ATP Finals show the future of men's tennis is bright,sports,5,2,4
+63,Triathlon training update: finally nailed the swim-to-bike transition,sports,5,-1,4
+64,The women's World Cup broke attendance records this year – incredible growth,sports,5,-1,4
+65,CrossFit Games 2026: the fittest athletes on earth push boundaries again,sports,5,-1,4
+66,"F1 sprint race format is growing on me – more action, less waiting",sports,5,-1,4
+67,NBA Draft 2026: the French prospect is drawing comparisons to Wembanyama,sports,5,-1,-1
+68,Kipchoge's marathon world record still stands – sub-2 hour barrier remains elusive,sports,5,-1,4
+69,Our running club's weekly interval sessions have transformed everyone's pace,sports,5,-1,4
+70,Champions League group stage draw: brutal group of death with 4 former winners,sports,5,3,4
+71,Swimming world records keep falling at the World Aquatics Championships,sports,5,-1,4
+72,The new offside technology in football eliminates 90% of controversial calls,sports,5,-1,-1
+73,Trained for my first half-Ironman – the bike leg is where races are won,sports,5,-1,-1
+74,MMA: UFC heavyweight division just had its most stacked card in years,sports,5,-1,-1
+75,Parkrun movement hits 10 million participants worldwide – running for everyone,sports,5,-1,4
+76,Alpine skiing World Cup: the downhill course in Kitzbühel is still the most feared,sports,5,-1,-1
+77,Padel tennis is the fastest growing sport in Europe – courts popping up everywhere,sports,5,-1,4
+78,Steph Curry's shooting clinic continues – 45 points on 10 three-pointers,sports,5,-1,-1
+79,E-sports prize pools now rival traditional sports – League of Legends Worlds had $5M,sports,5,-1,4
+80,The Rugby World Cup final was one of the greatest matches I've ever watched,sports,5,-1,-1
+81,Cycling infrastructure investments in Amsterdam show how to build bike-friendly cities,sports,5,-1,-1
+82,The new Champions League format with 36 teams makes every matchday exciting,sports,5,3,4
+83,"Olympic marathon trials: the pace from the start was suicidal, half the field dropped",sports,5,1,4
+84,Women's tennis depth is incredible – any player in the top 20 can win a major,sports,5,2,4
+85,Beach volleyball is the most underrated Olympic sport – pure athleticism,sports,5,-1,4
+86,Our gym's Olympic lifting program improved everyone's squat PR by 15%,sports,5,-1,-1
+87,Handball European Championship delivered non-stop action and dramatic finals,sports,5,-1,4
+88,College basketball March Madness upsets are the best thing in sports,sports,5,-1,4
+89,The NBA play-in tournament format creates incredible late-season drama,sports,5,-1,4
+90,Trail running through the Alps – 2000m elevation gain and stunning views,sports,5,-1,-1
+91,Marathon personal best today: 3:12:45 – negative split strategy worked perfectly,sports,5,0,4
+92,The new goalkeeper sweeper-keeper style has transformed modern football tactics,sports,5,-1,-1
+93,Nordic combined athletes are the most versatile in winter sports,sports,5,-1,-1
+94,Volunteering at parkrun every Saturday morning is my favorite community activity,sports,5,-1,-1
+95,The cricket T20 format is perfect for bringing new audiences to the sport,sports,5,-1,4
+96,Surf competition at Pipeline produced the best waves and riding in years,sports,5,-1,-1
+97,Our rowing club qualified for nationals – months of 5am training sessions paid off,sports,5,-1,-1
+98,Ice hockey playoff overtime is the most intense experience in team sports,sports,5,-1,4
+99,Breakdancing at the Olympics was surprisingly entertaining – respect to the athletes,sports,5,-1,4
+100,The athletics Diamond League meeting in Zurich broke three world records in one evening,sports,5,-1,4
+101,New meta-analysis shows Mediterranean diet reduces cardiovascular risk by 31%,health,0,-1,3
+102,30-day meditation challenge complete – anxiety levels noticeably lower,health,0,-1,5
+103,Get your updated flu shot early – this year's strain is spreading faster than usual,health,0,-1,-1
+104,"Intermittent fasting 16:8 for three months: lost 6kg, blood markers all improved",health,0,4,3
+105,Mental health check-in: it's okay to not be okay. Please reach out if you're struggling,health,0,-1,-1
+106,Sleep quality matters more than quantity – blackout curtains changed everything,health,0,-1,5
+107,Daily yoga practice for 8 months cured my chronic lower back pain,health,0,-1,-1
+108,New mRNA vaccine technology could revolutionize cancer treatment within a decade,health,2,-1,-1
+109,Wearable health trackers: my Oura ring data correlates perfectly with how I feel,health,0,-1,-1
+110,Cold plunge therapy: the science is mixed but I genuinely feel more alert after,health,0,-1,-1
+111,Gut microbiome research suggests probiotics can improve mental health outcomes,health,0,-1,-1
+112,Standing desk + walking pad combo eliminated my afternoon energy crashes,health,0,-1,-1
+113,Heart rate variability training helped me manage stress levels significantly,health,0,-1,5
+114,"Plant-based diet for 6 months – cholesterol dropped 25%, energy levels up",health,0,-1,3
+115,The link between poor sleep and Alzheimer's risk is more established than ever,health,0,-1,5
+116,Strength training twice a week reduces all-cause mortality by 20% – just start lifting,health,0,-1,5
+117,Breathwork techniques from Wim Hof method improved my cold tolerance dramatically,health,0,-1,-1
+118,New study links ultra-processed food consumption to higher depression risk,health,0,-1,3
+119,My therapist introduced CBT techniques that completely changed how I handle anxiety,health,0,-1,5
+120,Vitamin D supplementation in winter: the evidence for mood improvement is strong,health,0,-1,-1
+121,Zone 2 cardio training is the most underrated fitness hack – base building works,health,5,-1,4
+122,COVID long-hauler symptoms finally improving after 18 months – patience is key,health,0,-1,-1
+123,Sauna bathing 4x/week associated with 40% reduced cardiovascular mortality in Finnish study,health,0,-1,3
+124,Blood glucose monitors for non-diabetics: seeing real-time food impact changes behavior,health,0,-1,3
+125,The science of sleep stages: deep sleep is where physical recovery happens,health,0,-1,5
+126,Mindfulness-based stress reduction (MBSR) program reduced my cortisol by 23%,health,0,-1,5
+127,Foam rolling before bed improved my sleep onset time from 30 min to under 10,health,0,-1,5
+128,Creatine supplementation isn't just for bodybuilders – cognitive benefits are real,health,0,-1,5
+129,New RSV vaccine approved for elderly – could prevent thousands of hospitalizations,health,0,-1,-1
+130,"Walking 10,000 steps daily: the actual science says even 7,000 provides major benefits",health,0,-1,-1
+131,Magnesium glycinate before bed is the sleep supplement that actually works for me,health,0,-1,5
+132,Functional medicine approach finally identified the root cause of my chronic fatigue,health,0,-1,-1
+133,Ketogenic diet helped control my epilepsy better than medication alone,health,0,-1,-1
+134,Digital detox weekend: no screens for 48h – the mental clarity was remarkable,health,0,-1,-1
+135,Progressive muscle relaxation technique takes 15 minutes and genuinely reduces tension,health,0,-1,5
+136,"The longevity research from Blue Zones all points to community and purpose, not just diet",health,0,-1,-1
+137,Fasting-mimicking diet (5-day protocol) shows promising results for metabolic markers,health,0,4,3
+138,Stretching routine before sleep: 10 minutes that eliminated my restless leg symptoms,health,0,-1,5
+139,NAD+ supplementation research is exciting but still very early – cautious optimism,health,0,-1,-1
+140,"Eye strain from screens: 20-20-20 rule (20 min, 20 feet, 20 sec) actually helps",health,0,-1,-1
+141,Pre-workout caffeine timing: 30 minutes before exercise maximizes performance boost,health,0,-1,-1
+142,Grounding/earthing practice: walking barefoot on grass – relaxing regardless of the science,health,4,-1,-1
+143,Circadian rhythm optimization: morning sunlight exposure sets your internal clock,health,0,-1,-1
+144,Resistance band training at home is surprisingly effective for building muscle,health,0,-1,5
+145,Anti-inflammatory diet reduced my joint pain from running significantly,health,0,-1,-1
+146,Continuous glucose monitoring revealed that my 'healthy' smoothie caused huge spikes,health,0,-1,-1
+147,Music therapy sessions helped my grandmother's dementia symptoms noticeably,health,0,-1,-1
+148,Cognitive behavioral therapy for insomnia (CBT-I) is more effective than sleeping pills,health,0,-1,5
+149,The gut-brain axis research is fascinating – what you eat literally affects your mood,health,0,-1,-1
+150,Daily journaling for mental health: writing 3 pages each morning clears my head,health,0,-1,-1
+151,Oppenheimer is Nolan's masterpiece – the sound design alone deserves every award,entertainment,3,-1,-1
+152,Beyoncé's new album dropped and broke first-day streaming records on Spotify,entertainment,1,-1,1
+153,The Bear Season 3 might be the best television produced this decade,entertainment,3,-1,-1
+154,'Project Hail Mary' by Andy Weir is the best sci-fi novel since The Martian,entertainment,3,-1,-1
+155,Local jazz festival this weekend – live music experience can't be replicated digitally,entertainment,3,-1,1
+156,Zelda Tears of the Kingdom DLC adds 50+ hours of incredible new content,entertainment,3,-1,-1
+157,Succession finale was TV perfection – the ending will be debated for years,entertainment,3,-1,-1
+158,Dune Part Two is a visual masterpiece – Villeneuve might be our generation's best director,entertainment,3,-1,-1
+159,Taylor Swift Eras Tour generated more revenue than the GDP of some small nations,entertainment,1,-1,-1
+160,Baldur's Gate 3 sets a new standard for RPG storytelling and player choice,entertainment,3,-1,2
+161,Podcast recommendation: Lex Fridman's interview with the OpenAI team is fascinating,entertainment,3,-1,-1
+162,The Last of Us HBO adaptation proved video game stories can work on screen,entertainment,3,-1,2
+163,Shogun is the most beautifully crafted period drama since Chernobyl,entertainment,3,-1,-1
+164,Kendrick Lamar's new album is a lyrical masterpiece – every track hits differently,entertainment,3,-1,-1
+165,Reading '1000 Autumns of Jacob de Zoet' by David Mitchell – literary fiction at its finest,entertainment,3,-1,-1
+166,Elden Ring DLC Shadow of the Erdtree is brutally difficult and absolutely worth it,entertainment,3,-1,-1
+167,The Penguin series gives Batman's Gotham the gritty crime drama it deserves,entertainment,3,-1,-1
+168,Vinyl resurgence continues – record store sales up 30% year over year,entertainment,1,-1,1
+169,Severance Season 2 is the most mind-bending show since the original Westworld,entertainment,3,-1,-1
+170,Studio Ghibli retrospective at the local cinema – Spirited Away on the big screen!,entertainment,3,-1,-1
+171,Hades 2 early access already feels more polished than most finished games,entertainment,2,-1,-1
+172,True crime podcasts are oversaturated but 'Serial' season 4 brings back quality journalism,entertainment,3,-1,-1
+173,Christopher Nolan's next film announcement has everyone speculating already,entertainment,3,-1,-1
+174,The indie game scene is producing more innovation than AAA studios right now,entertainment,3,-1,2
+175,Reading Cixin Liu's 'Three-Body Problem' trilogy – hard sci-fi at its most ambitious,entertainment,3,-1,-1
+176,Fallout TV series on Amazon is surprisingly faithful to the game's tone and humor,entertainment,3,-1,-1
+177,Broadway's Hamilton still delivers an unforgettable live theater experience,entertainment,3,-1,-1
+178,Local indie bookstore events are keeping literary culture alive in our community,entertainment,3,-1,2
+179,Marvel fatigue is real but Deadpool & Wolverine proved the right tone still works,entertainment,3,-1,-1
+180,The Substance is the most provocative body horror film since Cronenberg's peak,entertainment,3,-1,-1
+181,Gaming accessibility options in modern titles are fantastic – inclusivity matters,entertainment,3,-1,2
+182,Vinyl pressing quality has improved dramatically – audiophile releases sound incredible,entertainment,3,-1,-1
+183,Slow Horses on Apple TV is the best spy thriller series since Tinker Tailor,entertainment,3,-1,-1
+184,Board game nights are back – Wingspan and Terraforming Mars are our group favorites,entertainment,5,-1,-1
+185,Japanese anime film Suzume crossed $300M worldwide – anime is truly mainstream now,entertainment,3,-1,-1
+186,The audiobook market is booming – full-cast productions rival traditional radio drama,entertainment,3,-1,2
+187,Wes Anderson's latest film is his most Wes Anderson film yet – and I love it,entertainment,3,-1,-1
+188,Reading Margaret Atwood's latest – her prose only gets sharper with age,entertainment,3,-1,-1
+189,GTA VI trailer views broke YouTube records – gaming's biggest launch is coming,entertainment,3,-1,-1
+190,Local comedy open mic nights are thriving – live comedy is irreplaceable,entertainment,3,-1,2
+191,Documentary recommendation: 'The Social Dilemma' is still the most important tech doc,entertainment,3,-1,-1
+192,K-pop's global influence keeps growing – BLACKPINK's world tour sold out in minutes,entertainment,1,-1,-1
+193,Tabletop RPG renaissance: D&D 5e brought millions of new players to the hobby,entertainment,3,-1,2
+194,The new A24 horror film is unsettling in the best possible way,entertainment,3,-1,-1
+195,Lo-fi hip hop study playlists have become a genuine cultural phenomenon,entertainment,3,-1,-1
+196,Cirque du Soleil's latest show combines acrobatics with holographic technology,entertainment,3,-1,-1
+197,Reading 'Piranesi' by Susanna Clarke – the most enchanting novel I've read in years,entertainment,3,-1,-1
+198,Street food documentary series on Netflix makes you want to travel and eat everything,entertainment,3,-1,-1
+199,Video essay YouTube channels are producing better film criticism than mainstream outlets,entertainment,3,-1,-1
+200,The resurgence of physical media: 4K Blu-rays offer quality streaming can't match,entertainment,3,-1,-1
+201,Climate report confirms 2025 was the hottest year on record globally,environment,4,-1,-1
+202,Planted 100 trees in our community reforestation project – every tree counts,environment,4,-1,1
+203,Solar panel installation costs dropped 40% in two years – ROI now under 5 years,environment,1,-1,1
+204,Microplastics found in 90% of bottled water – switching to filtered tap immediately,environment,4,-1,-1
+205,Electric vehicle sales surpassed gas cars in Norway for the fourth consecutive year,environment,4,-1,-1
+206,Our company achieved carbon neutrality – 2-year journey of offsets and real reductions,environment,4,-1,1
+207,Offshore wind farms in the North Sea now power 5 million homes,environment,4,-1,-1
+208,The Great Barrier Reef shows signs of recovery after coral restoration efforts,environment,4,-1,-1
+209,Urban vertical farming reduces water usage by 95% compared to traditional agriculture,environment,4,-1,1
+210,Heat pump adoption in Europe doubled – most efficient heating technology available,environment,4,-1,-1
+211,Ocean cleanup project removed 200 tonnes of plastic from the Pacific garbage patch,environment,4,-1,1
+212,Rewilding projects in Scotland are bringing back native species after centuries,environment,4,-1,1
+213,Green hydrogen production costs are finally approaching economic viability,environment,4,-1,-1
+214,Our neighborhood composting program diverts 30% of organic waste from landfills,environment,4,-1,1
+215,Battery recycling technology breakthrough: 95% of lithium now recoverable,environment,4,-1,-1
+216,Mangrove restoration protects coastlines better than any engineered seawall,environment,4,-1,-1
+217,The EU carbon border adjustment mechanism is reshaping global trade incentives,environment,4,-1,-1
+218,"Electric bus fleets in Chinese cities eliminated 300,000 tonnes of CO2 annually",environment,4,-1,-1
+219,Biodegradable packaging alternatives are finally becoming cost-competitive,environment,4,-1,-1
+220,Regenerative agriculture practices improved our farm's soil carbon by 40%,environment,4,-1,1
+221,Tesla Megapack grid-scale batteries are stabilizing renewable energy grids,environment,4,-1,-1
+222,Insect population decline is the silent crisis – pollinators are essential for food security,environment,4,-1,-1
+223,Geothermal energy in Iceland provides 90% of heating – a model for volcanic regions,environment,4,-1,-1
+224,Our city's bike-sharing program reduced downtown car traffic by 15%,environment,1,-1,-1
+225,Direct air capture technology is scaling but still costs $600/tonne of CO2,environment,4,-1,-1
+226,Peatland restoration in Ireland sequesters more carbon per hectare than forests,environment,4,-1,1
+227,"The fashion industry's water footprint is staggering – one pair of jeans uses 10,000 liters",environment,4,-1,-1
+228,Community solar gardens allow renters to benefit from solar energy without rooftop panels,environment,4,-1,-1
+229,Nuclear fusion milestone: sustained plasma for 6 minutes at ITER facility,environment,2,-1,-1
+230,Seagrass meadows are carbon sinks rivaling tropical forests per square meter,environment,4,-1,1
+231,Circular economy initiatives reduced our company's waste output by 60%,environment,4,-1,1
+232,Smart grid technology reduces energy waste by dynamically balancing supply and demand,environment,4,-1,1
+233,The Amazon deforestation rate dropped 40% under new enforcement policies,environment,4,-1,1
+234,Algae-based biofuels could replace aviation kerosene within a decade,environment,4,-1,-1
+235,Urban tree canopy coverage correlates directly with reduced summer temperatures,environment,4,-1,-1
+236,Water desalination powered by solar is bringing fresh water to arid coastal regions,environment,4,-1,1
+237,Plastic-eating enzymes discovered that break down PET bottles in 24 hours,environment,0,-1,-1
+238,Carbon credit markets are growing but need better verification to prevent greenwashing,environment,4,-1,-1
+239,Agrivoltaics: solar panels over crops provide shade and generate electricity simultaneously,environment,4,-1,1
+240,Deep-sea mining moratorium is essential until we understand ecological impacts,environment,4,-1,-1
+241,LED street lighting conversion saved our municipality 70% on energy bills,environment,4,-1,-1
+242,The circular phone movement: Fairphone shows electronics can be repairable and sustainable,environment,3,-1,-1
+243,River restoration projects are reviving ecosystems and improving flood resilience,environment,4,-1,1
+244,Passive house standard buildings use 90% less energy for heating and cooling,environment,4,-1,-1
+245,Indigenous land management practices outperform modern forestry for biodiversity,environment,4,-1,1
+246,Methane reduction from cattle farming using seaweed feed additive shows 80% decrease,environment,4,-1,-1
+247,E-waste is the fastest growing waste stream – proper recycling infrastructure is critical,environment,4,-1,1
+248,Green roofs in Copenhagen reduce stormwater runoff and create urban habitats,environment,4,-1,-1
+249,Carbon-negative concrete is moving from lab to commercial production,environment,4,-1,-1
+250,The right to repair movement is gaining legislative traction across the EU,environment,2,-1,-1
+251,Bitcoin just crossed $150k – institutional adoption driving this bull cycle,finance,1,-1,1
+252,"Best personal finance advice: automate savings, pay yourself first, always",finance,1,-1,1
+253,Housing market finally cooling – mortgage rates dropping below 5% again,finance,1,-1,1
+254,Index fund investing: 5-year returns prove passive beats active management for most people,finance,1,-1,1
+255,EU inflation dropped to 1.7% – ECB rate cuts expected in Q2,finance,1,-1,-1
+256,Side hustle update: Etsy shop revenue now exceeds my regular salary,finance,1,-1,-1
+257,Remote work productivity studies show hybrid 3-day office model works best for retention,finance,0,-1,-1
+258,Ethereum ETF approval sent the entire crypto market surging 20% in a week,finance,1,-1,1
+259,FIRE movement milestone: reached our financial independence number at age 38,finance,1,-1,-1
+260,"Stock market correction of 15% – time to dollar-cost average, not panic sell",finance,1,-1,1
+261,Robo-advisors vs traditional financial planners: comparing 5-year performance,finance,1,-1,1
+262,Real estate investment trusts (REITs) offer property exposure without landlord headaches,finance,1,-1,-1
+263,"The gig economy tax implications are complex – hire an accountant, seriously",finance,1,-1,-1
+264,Treasury bonds yielding 4.5% – risk-free returns haven't been this good in 15 years,finance,1,-1,1
+265,Micro-investing apps like Acorns make starting with $5 a day actually feasible,finance,1,-1,1
+266,DeFi yield farming returns normalized – the 100% APY days are over,finance,4,-1,-1
+267,Our company's ESOP program just vested – life-changing wealth creation for employees,finance,1,-1,1
+268,Credit card rewards optimization: churning saved us $3k on travel this year,finance,1,-1,-1
+269,Budgeting with YNAB changed our financial behavior more than any investment advice,finance,1,-1,1
+270,Commercial real estate market is struggling – office vacancy rates at record highs,finance,1,-1,1
+271,Gold hit new all-time high – traditional safe haven still relevant in modern portfolios,finance,1,-1,-1
+272,Student loan refinancing at 3.5% saved $15k over the life of the loan,finance,1,-1,1
+273,Dividend growth investing: 10 years of reinvested dividends compounded beautifully,finance,1,-1,1
+274,The wealth gap continues widening – policy changes needed for economic mobility,finance,1,-1,-1
+275,Cryptocurrency regulation clarity is actually good for the market – institutional money needs rules,finance,1,5,1
+276,Emergency fund advice: 6 months expenses in high-yield savings paying 5% APY,finance,1,-1,1
+277,Venture capital dry powder at record levels – startup valuations should benefit,finance,1,-1,-1
+278,Insurance premiums skyrocketing due to climate events – pricing in real risk now,finance,1,-1,-1
+279,Tax-loss harvesting in December saved us $4k in capital gains taxes,finance,1,-1,-1
+280,The 4% withdrawal rule for retirement may need updating for longer lifespans,finance,1,-1,-1
+281,Japan's rate hike sent shockwaves through carry trade positions globally,finance,1,-1,-1
+282,Peer-to-peer lending platforms: our experience after 3 years and 8% average returns,finance,1,-1,-1
+283,Digital nomad tax residency optimization is increasingly complex across jurisdictions,finance,1,-1,-1
+284,Value investing principles still work – Buffett's annual letter is always a masterclass,finance,1,-1,1
+285,NFT market crashed 95% from peak – speculative bubbles always burst eventually,finance,1,-1,1
+286,Our startup's Series A raised $12M at $50M valuation – fintech is hot again,finance,1,-1,1
+287,Private equity returns are compressing – the easy-money era is definitively over,finance,1,-1,1
+288,Fractional real estate investing platforms democratize property investment,finance,1,-1,-1
+289,Central bank digital currencies (CBDCs) will reshape monetary policy tools,finance,1,-1,1
+290,Angel investing portfolio update: 2 out of 15 companies returned the entire fund,finance,1,-1,1
+291,Cost of living crisis: average rent now exceeds 40% of median income in major cities,finance,1,-1,-1
+292,High-frequency trading debate: does it provide liquidity or front-run retail investors?,finance,1,-1,-1
+293,Sustainable investing (ESG) funds now outperform traditional indices over 5-year periods,finance,1,-1,1
+294,Payroll taxes hit differently when you're self-employed – quarterly estimated payments are painful,finance,1,-1,-1
+295,The S&P 500 hit a new all-time high – market timing is a fool's game,finance,1,-1,1
+296,Stablecoin regulation is the most impactful crypto policy development this year,finance,1,5,1
+297,Our family's 529 college savings plan has grown 40% in 5 years,finance,1,-1,1
+298,Money market funds yielding 5.2% – finally a reasonable alternative to checking accounts,finance,1,-1,1
+299,The psychology of spending: switching to cash-only for discretionary purchases cut spending 30%,finance,1,-1,1
+300,Small business SBA loan at 6% funded our expansion – government programs underutilized,finance,1,-1,1

@@ -31,6 +31,9 @@ def _is_gemini_model(model_name: str) -> bool:
 # Gemini backend
 # ---------------------------------------------------------------------------
 
+_GEMINI_BATCH_SIZE = 100  # Gemini API supports up to 100 texts per batch call
+
+
 def _embed_with_gemini(
     texts: list[str],
     model_name: str,
@@ -38,7 +41,7 @@ def _embed_with_gemini(
     task_type: str = "CLUSTERING",
     api_key: Optional[str] = None,
 ) -> np.ndarray:
-    """Call the Gemini Embedding API for a list of texts.
+    """Call the Gemini Embedding API for a list of texts using batch requests.
 
     Args:
         texts: List of strings to embed.
@@ -53,14 +56,8 @@ def _embed_with_gemini(
     Returns:
         Float64 array of shape (N, D).
     """
-    try:
-        from google import genai
-        from google.genai import types as genai_types
-    except ImportError as e:
-        raise ImportError(
-            "google-genai ist nicht installiert. "
-            "Bitte ausführen: pip install google-genai"
-        ) from e
+    from google.genai import types as genai_types
+    from src.utils import get_gemini_client
 
     key = api_key or os.environ.get("GOOGLE_API_KEY")
     if not key:
@@ -69,7 +66,7 @@ def _embed_with_gemini(
             "Setze GOOGLE_API_KEY als Umgebungsvariable oder trage ihn in model.gemini.api_key ein."
         )
 
-    client = genai.Client(api_key=key)
+    client = get_gemini_client(api_key=key)
 
     embed_config = genai_types.EmbedContentConfig(task_type=task_type)
     if output_dimensionality is not None:
@@ -78,22 +75,26 @@ def _embed_with_gemini(
             output_dimensionality=output_dimensionality,
         )
 
-    embeddings: list[list[float]] = []
-    for i, text in enumerate(texts):
+    all_embeddings: list[list[float]] = []
+
+    # Process in batches for efficiency
+    for batch_start in range(0, len(texts), _GEMINI_BATCH_SIZE):
+        batch = texts[batch_start:batch_start + _GEMINI_BATCH_SIZE]
+
         # Retry loop for 429 rate-limit errors
         while True:
             try:
                 result = client.models.embed_content(
                     model=model_name,
-                    contents=text,
+                    contents=batch,
                     config=embed_config,
                 )
-                embeddings.append(result.embeddings[0].values)
+                for emb in result.embeddings:
+                    all_embeddings.append(emb.values)
                 break
             except Exception as exc:
                 msg = str(exc)
                 if "429" in msg or "RESOURCE_EXHAUSTED" in msg:
-                    # Extract suggested retry delay from error message, default 60s
                     match = re.search(r"retry in (\d+)", msg)
                     wait = int(match.group(1)) + 5 if match else 65
                     print(f"\n    ⏳ Rate limit (429) — warte {wait}s ... ", end="", flush=True)
@@ -102,11 +103,11 @@ def _embed_with_gemini(
                 else:
                     raise
 
-        if (i + 1) % 10 == 0 or (i + 1) == len(texts):
-            print(f"    {i + 1}/{len(texts)} eingebettet...", end="\r")
+        done = min(batch_start + len(batch), len(texts))
+        print(f"    {done}/{len(texts)} eingebettet...", end="\r")
 
     print()  # newline after progress
-    return np.array(embeddings, dtype=np.float64)
+    return np.array(all_embeddings, dtype=np.float64)
 
 
 # ---------------------------------------------------------------------------

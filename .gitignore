@@ -1,5 +1,12 @@
 # Secrets
 .env
+.streamlit/credentials.toml
+
+# Claude Code internals
+.claude/
+
+# Persönliche Notizen
+Erkenntnisse_Gemini_Chat_BA.md
 
 # Python
 __pycache__/
@@ -37,6 +44,17 @@ results/comparison_table.csv
 results/comparison_table.md
 results/stability_report.md
 results/ethics_reviews/
+
+# Experimentelle Ergebnis-Unterordner
+results/filtered/
+results/kaggle/
+results/neu/
+results/testcases/
+results/travel/
+results/agent_messages.json
+
+# Kaggle Datasets (zu groß für Git)
+data/kaggle/*.csv
 
 # IDE
 .vscode/

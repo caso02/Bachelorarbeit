@@ -2,7 +2,7 @@
 
 Prioritäts-Reihenfolge:
   Modus A  🟢  Reddit API   — praw + REDDIT_CLIENT_ID in .env
-  Modus B  🟡  Kaggle CSV   — data/kaggle/reddit_data.csv
+  Modus B  🟡  Kaggle CSV   — data/kaggle/*.csv (Multi-CSV-Support)
   Modus C  🔴  Mock-Fallback — data/raw/sample_posts_300.csv (immer vorhanden)
 
 Privacy & Responsible AI:
@@ -32,7 +32,7 @@ import pandas as pd
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 MOCK_CSV     = PROJECT_ROOT / "data" / "raw"  / "sample_posts_300.csv"
-KAGGLE_CSV   = PROJECT_ROOT / "data" / "kaggle" / "reddit_data.csv"
+KAGGLE_DIR   = PROJECT_ROOT / "data" / "kaggle"
 
 
 # ---------------------------------------------------------------------------
@@ -52,18 +52,26 @@ class UniversalCollector:
     def __init__(self, config_path: Optional[Path] = None) -> None:
         self.config_path = config_path
         # Load .env if not already done
-        _load_dotenv(PROJECT_ROOT / ".env")
+        from src.utils import load_dotenv
+        load_dotenv(PROJECT_ROOT / ".env")
 
     # ------------------------------------------------------------------
     # Public API
     # ------------------------------------------------------------------
 
-    def collect(self, query: str = "", limit: int = 500) -> list[dict]:
+    def collect(
+        self,
+        query: str = "",
+        limit: int = 500,
+        subreddits: list[str] | None = None,
+    ) -> list[dict]:
         """Collect posts using the highest-priority available source.
 
         Args:
             query: Keyword to search / filter posts. Empty string = no filter.
             limit: Maximum number of posts to return (primarily for Reddit).
+            subreddits: Optional list of subreddit names to filter on
+                (e.g. ``["technology", "art"]``).  None = all available.
 
         Returns:
             List of post dicts with keys:
@@ -71,8 +79,12 @@ class UniversalCollector:
         """
         posts = self._try_reddit(query, limit)
         if posts is None:
-            posts = self._try_kaggle(query)
+            posts = self._try_kaggle(query, limit=limit, subreddits=subreddits)
         if posts is None:
+            if subreddits:
+                print(f"  ⚠  Keine Daten für Subreddits {subreddits} gefunden "
+                      "— kein Mock-Fallback bei expliziter Sub-Angabe")
+                return []
             posts = self._fallback_mock(query)
         return posts
 
@@ -138,54 +150,141 @@ class UniversalCollector:
             return None
 
     # ------------------------------------------------------------------
-    # Modus B — Kaggle CSV
+    # Modus B — Kaggle CSV (Multi-CSV-Support)
     # ------------------------------------------------------------------
 
-    def _try_kaggle(self, query: str) -> list[dict] | None:
-        if not KAGGLE_CSV.exists():
+    def _try_kaggle(
+        self,
+        query: str,
+        limit: int = 500,
+        subreddits: list[str] | None = None,
+    ) -> list[dict] | None:
+        """Load posts from CSV files in data/kaggle/.
+
+        Supports:
+        - Single CSV (e.g. ``reddit_data.csv``)
+        - Multiple CSVs (e.g. 50 subreddit-specific files from Kaggle)
+        - Automatic column detection (body/selftext/text, subreddit/category, etc.)
+        - NSFW and bot filtering (when columns are present)
+        - Keyword filtering via query parameter
+        - Subreddit filtering via subreddits parameter
+
+        Returns:
+            List of post dicts, or None if no CSV files found.
+        """
+        if not KAGGLE_DIR.exists():
             return None
 
-        try:
-            df = pd.read_csv(KAGGLE_CSV)
-        except Exception as exc:
-            print(f"  ⚠  Kaggle-CSV Ladefehler: {exc}")
+        csv_files = sorted(KAGGLE_DIR.glob("*.csv"))
+        if not csv_files:
             return None
 
-        # Flexible Spalten-Erkennung
-        text_col = next(
-            (c for c in ("selftext", "text", "body", "title") if c in df.columns), None
-        )
+        # --- Optimierung: Nur passende CSVs laden (Dateiname = Subreddit) ---
+        if subreddits:
+            lower_subs = [s.lower() for s in subreddits]
+            csv_files = [f for f in csv_files if f.stem.lower() in lower_subs]
+            if not csv_files:
+                print(f"  ⚠  Keine CSV-Dateien für Subreddits {subreddits} gefunden")
+                return None
+
+        # --- Lade alle CSVs ---
+        frames = []
+        for csv_path in csv_files:
+            try:
+                df = pd.read_csv(csv_path, low_memory=False)
+                if not df.empty:
+                    frames.append(df)
+            except Exception as exc:
+                print(f"  ⚠  Kaggle-CSV Ladefehler ({csv_path.name}): {exc}")
+                continue
+
+        if not frames:
+            return None
+
+        df = pd.concat(frames, ignore_index=True)
+        n_files = len(frames)
+
+        # --- Flexible Spalten-Erkennung ---
+        text_col   = next((c for c in ("body", "selftext", "text", "title") if c in df.columns), None)
+        cat_col    = next((c for c in ("subreddit", "category", "label")    if c in df.columns), None)
+        author_col = next((c for c in ("author", "username")               if c in df.columns), None)
+        id_col     = next((c for c in ("id", "post_id", "name")            if c in df.columns), None)
+        score_col  = next((c for c in ("score", "ups", "upvotes")          if c in df.columns), None)
+
         if text_col is None:
-            print("  ⚠  Kaggle-CSV hat keine erkannte Text-Spalte — überspringe")
+            print("  ⚠  Kaggle-CSVs haben keine erkannte Text-Spalte — überspringe")
             return None
 
-        cat_col    = next((c for c in ("subreddit", "category", "label") if c in df.columns), None)
-        author_col = next((c for c in ("author", "username")             if c in df.columns), None)
-        id_col     = next((c for c in ("id", "post_id", "name")          if c in df.columns), None)
-        score_col  = next((c for c in ("score", "ups", "upvotes")        if c in df.columns), None)
+        # --- Subreddit-Filter (Spalten-basiert, für Mixed-CSVs) ---
+        if subreddits and cat_col and cat_col in df.columns:
+            lower_subs = [s.lower() for s in subreddits]
+            df = df[df[cat_col].astype(str).str.lower().isin(lower_subs)]
+            if df.empty:
+                print(f"  ⚠  Keine Posts für Subreddits {subreddits} nach Spalten-Filter")
+                return None
 
-        # Keyword-Filter
+        # --- Filtern: NSFW, Bots, leere Posts ---
+        if "is_nsfw" in df.columns:
+            df = df[df["is_nsfw"] != True]  # noqa: E712
+        if "is_bot" in df.columns:
+            df = df[df["is_bot"] != True]  # noqa: E712
+
+        # Leere Texte entfernen
+        text_col_orig = text_col
+        df_filtered = df[df[text_col].notna() & (df[text_col].astype(str).str.strip() != "")]
+
+        # Fallback: Wenn body/selftext komplett leer, aber title vorhanden → title nutzen
+        if df_filtered.empty and text_col != "title" and "title" in df.columns:
+            text_col = "title"
+            df_filtered = df[df[text_col].notna() & (df[text_col].astype(str).str.strip() != "")]
+            if not df_filtered.empty:
+                print(f"  ℹ  '{text_col_orig}'-Spalte leer — nutze 'title' als Text ({len(df_filtered)} Posts)")
+
+        df = df_filtered
+
+        # --- Keyword-Filter ---
         if query:
-            mask = df[text_col].astype(str).str.contains(query, case=False, na=False)
+            # Suche in Haupttext und Title (falls vorhanden)
+            search_col = df[text_col].astype(str)
+            if "title" in df.columns and text_col != "title":
+                search_col = search_col + " " + df["title"].astype(str)
+            mask = search_col.str.contains(query, case=False, na=False, regex=False)
             df = df[mask]
 
+        if df.empty:
+            return None
+
+        # --- Limit anwenden (zufällige Stichprobe bei grossen Datasets) ---
+        if len(df) > limit:
+            df = df.sample(n=limit, random_state=42)
+
+        # --- Posts bauen ---
         posts = []
         for i, row in df.iterrows():
             raw_text = str(row[text_col])
-            # Merge title if available and different from text_col
+            # Title + Body zusammenführen (falls body als Haupttext, title separat)
             if "title" in df.columns and text_col != "title":
-                raw_text = f"{row.get('title', '')} {raw_text}".strip()
+                title = str(row.get("title", ""))
+                if title and title != "nan":
+                    raw_text = f"{title} {raw_text}".strip()
 
-            author = str(row[author_col]) if author_col else ""
+            author = str(row[author_col]) if author_col and pd.notna(row.get(author_col)) else ""
+
+            try:
+                score = int(row[score_col]) if score_col and pd.notna(row.get(score_col)) else 0
+            except (ValueError, TypeError):
+                score = 0
+
             posts.append({
-                "id":          str(row[id_col]) if id_col else str(i),
+                "id":          str(row[id_col]) if id_col and pd.notna(row.get(id_col)) else str(i),
                 "text_clean":  self._clean_text(raw_text),
-                "category":    str(row[cat_col]) if cat_col else "unknown",
+                "category":    str(row[cat_col]) if cat_col and pd.notna(row.get(cat_col)) else "unknown",
                 "author_hash": self.anonymize_author(author),
-                "score":       int(row[score_col]) if score_col else 0,
+                "score":       score,
             })
 
-        print(f"  🟡 Kaggle-Daten aktiv — {len(posts)} Posts gefiltert (query='{query}')")
+        print(f"  🟡 Kaggle-Daten aktiv — {len(posts)} Posts aus {n_files} CSV(s) "
+              f"(query='{query}', total verfügbar: {len(frames[0]) if len(frames) == 1 else sum(len(f) for f in frames)})")
         return posts if posts else None
 
     # ------------------------------------------------------------------
@@ -196,7 +295,7 @@ class UniversalCollector:
         df = pd.read_csv(MOCK_CSV)
 
         if query:
-            mask = df["text"].astype(str).str.contains(query, case=False, na=False)
+            mask = df["text"].astype(str).str.contains(query, case=False, na=False, regex=False)
             filtered = df[mask]
             # If no matches, return all posts (never return empty)
             if filtered.empty:
@@ -236,20 +335,3 @@ class UniversalCollector:
         # 4. Normalise whitespace
         return ' '.join(text.split())
 
-
-# ---------------------------------------------------------------------------
-# .env loader
-# ---------------------------------------------------------------------------
-
-def _load_dotenv(path: Path) -> None:
-    if not path.exists():
-        return
-    for line in path.read_text().splitlines():
-        line = line.strip()
-        if not line or line.startswith("#") or "=" not in line:
-            continue
-        key, _, value = line.partition("=")
-        key   = key.strip()
-        value = value.strip().strip('"').strip("'")
-        if key and key not in os.environ:
-            os.environ[key] = value
