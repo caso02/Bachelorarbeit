@@ -39,7 +39,7 @@ clustering:
   methods:
     - name: "kmeans"
       params:
-        n_clusters: 8
+        n_clusters: 6
         random_state: 42
 
     - name: "dbscan"
@@ -65,10 +65,6 @@ interest_labels:
     - "databases, PostgreSQL, Redis, and data storage"
     - "Python programming and backend development"
     - "developer tools, GitHub Copilot, and IDE productivity"
-    - "cybersecurity, penetration testing, and network security"
-    - "open source contributions and building side projects on GitHub"
-    - "robotics, embedded systems, and hardware engineering"
-    - "data science, statistical modeling, and scientific computing"
   sports:
     - "football, soccer, Champions League, and Premier League"
     - "tennis, Grand Slam tournaments, and ATP rankings"
@@ -78,9 +74,6 @@ interest_labels:
     - "cycling, Tour de France, and bike racing"
     - "Olympic Games, athletics, and world records"
     - "fitness training, CrossFit, and gym workouts"
-    - "martial arts, MMA, boxing, and combat sports"
-    - "hiking, trail running, and outdoor adventure sports"
-    - "esports, competitive gaming tournaments, and pro leagues"
   health:
     - "sleep quality, insomnia, and circadian rhythm"
     - "intermittent fasting, diet, and nutrition"
@@ -90,10 +83,6 @@ interest_labels:
     - "wearable health devices and biometric tracking"
     - "supplements, vitamins, and longevity research"
     - "exercise science, zone 2 cardio, and strength training"
-    - "chronic illness management, autoimmune conditions, and patient support"
-    - "gut microbiome, probiotics, and digestive health"
-    - "addiction recovery, sobriety journeys, and substance abuse help"
-    - "preventive healthcare, annual checkups, and early screening"
   entertainment:
     - "movies, cinema, film directors, and award season"
     - "TV shows, streaming series, and binge-watching"
@@ -103,9 +92,6 @@ interest_labels:
     - "podcasts, YouTube, and digital content creators"
     - "theater, live comedy, and performing arts"
     - "anime, manga, and Japanese entertainment"
-    - "board games, tabletop RPGs, and card games"
-    - "fan theories, movie reviews, and pop culture debates"
-    - "music production, DJing, and learning instruments"
   environment:
     - "climate change, global warming, and carbon emissions"
     - "solar energy, wind power, and renewable electricity"
@@ -115,11 +101,8 @@ interest_labels:
     - "sustainable agriculture, composting, and organic farming"
     - "green building, passive house, and energy efficiency"
     - "carbon capture, carbon credits, and climate policy"
-    - "wildlife conservation, endangered species, and habitat protection"
-    - "sustainable fashion, zero waste lifestyle, and ethical consumption"
-    - "water scarcity, clean water access, and desalination technology"
   finance:
-    - "cryptocurrency investing, trading strategies, and market analysis"
+    - "bitcoin, cryptocurrency, and blockchain technology"
     - "ETF, index funds, and passive investing"
     - "inflation, interest rates, and central bank policy"
     - "real estate, housing market, and mortgage rates"
@@ -127,35 +110,6 @@ interest_labels:
     - "stock market, S&P 500, and equity investing"
     - "side hustle, freelancing, and entrepreneurship"
     - "retirement planning, FIRE movement, and financial independence"
-    - "student loan debt, loan repayment strategies, and financial aid"
-    - "tax optimization, deductions, and small business accounting"
-    - "venture capital, startup funding, and angel investing"
-  travel:
-    - "backpacking through Southeast Asia and learning about different cultures"
-    - "budget travel tips and affordable hostel recommendations in Europe"
-    - "digital nomad lifestyle, remote work from different countries"
-    - "road trip across the American Southwest with stunning landscapes"
-    - "solo travel safety tips for women traveling abroad"
-    - "the best street food markets in Bangkok and Tokyo"
-    - "visa requirements and travel insurance for long-term trips"
-    - "cultural immersion, learning local languages while traveling"
-    - "mountain trekking in Nepal, Patagonia, and the Swiss Alps"
-    - "travel photography tips and capturing landscapes on the road"
-    - "volunteering abroad and sustainable tourism experiences"
-    - "city guides, hidden gems, and off-the-beaten-path destinations"
-  social:
-    - "setting boundaries with family members who don't respect my choices"
-    - "how friendships change in your thirties and building new connections"
-    - "the ethics of what we owe future generations and social responsibility"
-    - "navigating difficult conversations with coworkers about sensitive topics"
-    - "how social media is changing relationships, identity and mental health"
-    - "finding common ground with neighbors who have very different political views"
-    - "the challenges of maintaining long-distance friendships over the years"
-    - "parenting struggles, work-life balance, and modern family dynamics"
-    - "dealing with loneliness in a new city and building a social network"
-    - "everyday acts of kindness and their ripple effects in communities"
-    - "social norms that are changing and generational differences in values"
-    - "relationship advice, conflict resolution, and emotional intelligence"
 
 hierarchical:
   subcluster_method: "hdbscan"

@@ -53,8 +53,28 @@ results/testcases/
 results/travel/
 results/agent_messages.json
 
-# Kaggle Datasets (zu groß für Git)
+# Kaggle Datasets (zu gross für Git)
 data/kaggle/*.csv
+data/kaggle_neu/rspct.tsv
+data/kaggle_neu/subreddit_info.csv
+
+# Corpus Index (zu gross für Git, wird lokal gebaut)
+data/corpus_index/
+data/corpus_index_smoketest/
+
+# Bachelorarbeit-Schreibordner (persönliche Texte, PDFs, nicht für Git)
+bachelorarbeit_schreiben/
+
+# Synthetische Daten (generiert, reproduzierbar via Skript)
+synthetic_data/generation_log.jsonl
+
+# Evaluations-Ergebnis-Unterordner (generiert, reproduzierbar)
+results/run1_reddit_8cat/
+results/run1a_reddit_8cat_broad/
+results/run1c_reddit_pipeline/
+results/run2_synthetic_edge/
+results/run3_ethics_stress/
+results/category_gap_comparison/
 
 # IDE
 .vscode/

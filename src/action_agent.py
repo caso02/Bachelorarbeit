@@ -55,7 +55,7 @@ class ActionAgent:
 
     def __init__(
         self,
-        model_name: str = "gemini-2.5-flash",
+        model_name: str = "gemini-flash-latest",
         api_key: Optional[str] = None,
         readiness_threshold: float = 0.4,
     ) -> None:

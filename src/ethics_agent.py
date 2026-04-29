@@ -98,7 +98,7 @@ class EthicsAgent:
 
     def __init__(
         self,
-        model_name: str = "gemini-2.5-flash",
+        model_name: str = "gemini-flash-latest",
         api_key: Optional[str] = None,
         output_dir: str | Path = "results/ethics_reviews",
     ) -> None:

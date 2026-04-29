@@ -49,11 +49,17 @@ def compute_metrics(
         return {"silhouette": None, "davies_bouldin": None, "n_clusters": len(unique_labels)}
 
     mask = labels != -1
-    if mask.sum() < 2:
-        return {"silhouette": None, "davies_bouldin": None, "n_clusters": len(unique_labels)}
+    n_valid = int(mask.sum())
+    if n_valid < len(unique_labels) + 1:
+        return {"silhouette": None, "davies_bouldin": None, "n_clusters": len(unique_labels),
+                "noise_points": int((labels == -1).sum())}
 
-    sil = float(silhouette_score(embeddings[mask], labels[mask]))
-    db = float(davies_bouldin_score(embeddings[mask], labels[mask]))
+    try:
+        sil = float(silhouette_score(embeddings[mask], labels[mask]))
+        db = float(davies_bouldin_score(embeddings[mask], labels[mask]))
+    except ValueError:
+        return {"silhouette": None, "davies_bouldin": None, "n_clusters": len(unique_labels),
+                "noise_points": int((labels == -1).sum())}
 
     return {
         "silhouette": round(sil, 4),
