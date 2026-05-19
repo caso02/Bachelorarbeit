@@ -82,7 +82,7 @@ scripts/generate_architecture_variants.py
 scripts/generate_thesis_figures.py
 
 # Design-Docs (intern, nicht für Repo)
-docs/query_mode_design.md
+docs/
 
 # LaTeX-Artefakte
 texput.log
