@@ -148,9 +148,9 @@ def call_gemini_with_retry(
                       end="", flush=True)
                 time.sleep(wait)
                 print("weiter.")
-            elif "503" in msg or "UNAVAILABLE" in msg:
+            elif "503" in msg or "502" in msg or "UNAVAILABLE" in msg or "Bad Gateway" in msg:
                 wait = 30 * (attempt + 1)  # 30s, 60s, 90s, 120s, 150s
-                print(f"\n    ⏳ Service unavailable (503) — warte {wait}s ... ",
+                print(f"\n    ⏳ Server-Fehler (502/503) — warte {wait}s ... ",
                       end="", flush=True)
                 time.sleep(wait)
                 print("weiter.")

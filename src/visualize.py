@@ -15,6 +15,26 @@ from typing import Optional
 
 import numpy as np
 
+# ---------------------------------------------------------------------------
+# Shared thesis style constants
+# ---------------------------------------------------------------------------
+THESIS_BG = "#ffffff"
+THESIS_SPINE = "#cccccc"
+THESIS_DPI = 300
+THESIS_TITLE_SIZE = 13
+THESIS_LABEL_SIZE = 11
+THESIS_TICK_SIZE = 9
+
+
+def _apply_thesis_style(ax) -> None:
+    """Apply the unified thesis figure style to an axes object."""
+    import matplotlib.pyplot as plt
+    ax.set_facecolor(THESIS_BG)
+    ax.figure.patch.set_facecolor(THESIS_BG)
+    for spine in ax.spines.values():
+        spine.set_edgecolor(THESIS_SPINE)
+    ax.tick_params(labelsize=THESIS_TICK_SIZE)
+
 
 # ---------------------------------------------------------------------------
 # Dimensionality reduction
@@ -118,8 +138,7 @@ def plot_topic_separation(
     color_map = {t: palette[i] for i, t in enumerate(topics)}
 
     fig, ax = plt.subplots(figsize=figsize)
-    fig.patch.set_facecolor("#f8f9fa")
-    ax.set_facecolor("#f8f9fa")
+    _apply_thesis_style(ax)
 
     for topic in topics:
         mask = np.array(topic_labels) == topic
@@ -133,21 +152,17 @@ def plot_topic_separation(
             edgecolors="none",
         )
 
-    ax.set_title(title, fontsize=14, fontweight="bold", pad=12)
-    ax.set_xlabel("Dimension 1", fontsize=10)
-    ax.set_ylabel("Dimension 2", fontsize=10)
+    ax.set_title(title, fontsize=THESIS_TITLE_SIZE, fontweight="bold", pad=12)
+    ax.set_xlabel("t-SNE Dimension 1", fontsize=THESIS_LABEL_SIZE)
+    ax.set_ylabel("t-SNE Dimension 2", fontsize=THESIS_LABEL_SIZE)
     ax.legend(
         title="Topic",
-        title_fontsize=9,
-        fontsize=9,
+        title_fontsize=THESIS_TICK_SIZE,
+        fontsize=THESIS_TICK_SIZE,
         loc="best",
         framealpha=0.9,
         markerscale=1.5,
     )
-    ax.tick_params(labelsize=8)
-
-    for spine in ax.spines.values():
-        spine.set_edgecolor("#cccccc")
 
     plt.tight_layout()
     plt.savefig(output_path, dpi=dpi, bbox_inches="tight")
@@ -200,8 +215,7 @@ def plot_readiness_heatmap(
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     fig, ax = plt.subplots(figsize=figsize)
-    fig.patch.set_facecolor("#f8f9fa")
-    ax.set_facecolor("#f8f9fa")
+    _apply_thesis_style(ax)
 
     # Optional faint background per-topic scatter for orientation
     if topic_labels is not None:
@@ -223,16 +237,12 @@ def plot_readiness_heatmap(
     )
 
     cbar = fig.colorbar(sc, ax=ax, pad=0.02)
-    cbar.set_label("Community-Readiness Score", fontsize=10)
-    cbar.ax.tick_params(labelsize=8)
+    cbar.set_label("Community-Readiness Score", fontsize=THESIS_LABEL_SIZE)
+    cbar.ax.tick_params(labelsize=THESIS_TICK_SIZE)
 
-    ax.set_title(title, fontsize=14, fontweight="bold", pad=12)
-    ax.set_xlabel("Dimension 1", fontsize=10)
-    ax.set_ylabel("Dimension 2", fontsize=10)
-    ax.tick_params(labelsize=8)
-
-    for spine in ax.spines.values():
-        spine.set_edgecolor("#cccccc")
+    ax.set_title(title, fontsize=THESIS_TITLE_SIZE, fontweight="bold", pad=12)
+    ax.set_xlabel("t-SNE Dimension 1", fontsize=THESIS_LABEL_SIZE)
+    ax.set_ylabel("t-SNE Dimension 2", fontsize=THESIS_LABEL_SIZE)
 
     plt.tight_layout()
     plt.savefig(output_path, dpi=dpi, bbox_inches="tight")

@@ -334,16 +334,24 @@ def run_analysis(input_: str = "") -> str:
 
     clusters.sort(key=lambda c: c["avg_readiness"], reverse=True)
 
-    # --- Cluster-Plot generieren → results/cluster_plot.png ---
-    print("  ↳ Cluster-Plot generieren ...")
+    # --- Cluster-Plots generieren ---
+    print("  ↳ Cluster-Plots generieren ...")
     try:
-        from src.visualize import reduce_dimensions, plot_topic_separation
+        from src.visualize import reduce_dimensions, plot_topic_separation, plot_readiness_heatmap
         coords = reduce_dimensions(embeddings_768, method="tsne", random_state=42)
         plot_topic_separation(
             coords=coords,
             topic_labels=hierarchy_df["topic_label"].values,
             output_path=RESULTS_DIR / "cluster_plot.png",
             title="Community Cluster Analysis (Gemini 768 MRL · t-SNE)",
+            dpi=150,
+        )
+        plot_readiness_heatmap(
+            coords=coords,
+            readiness_scores=hierarchy_df["readiness_score"].values,
+            output_path=RESULTS_DIR / "readiness_heatmap.png",
+            topic_labels=hierarchy_df["topic_label"].values,
+            title="Community-Readiness Hotspots (Gemini 768 MRL · t-SNE)",
             dpi=150,
         )
     except Exception as exc:
@@ -729,9 +737,13 @@ def _generate_nudges_stateful(state: AgentState) -> AgentState:
     from src.action_agent import ActionAgent
 
     n = state.max_nudges
-    top_clusters = [c for c in state.clusters if c["avg_readiness"] > 0.35][:n]
-    if not top_clusters:
-        top_clusters = state.clusters[:n]
+    # Filter: nur Cluster mit mindestens 3 Posts (Singleton-Cluster sind nicht nudge-würdig)
+    viable = [c for c in state.clusters if c["n_posts"] >= 3 and c["avg_readiness"] > 0.35]
+    if not viable:
+        viable = [c for c in state.clusters if c["n_posts"] >= 2]
+    if not viable:
+        viable = state.clusters
+    top_clusters = viable[:n]
 
     agent_inst = ActionAgent()
     nudges = []
@@ -817,15 +829,23 @@ class Coordinator:
         print("=" * 65)
 
         # --- Phase 1: Observe ---
-        _notify("collect", "Daten sammeln...")
-        print(f"\n{'─' * 65}\n Observe — Collector\n{'─' * 65}")
-        try:
-            state = _collect_stateful(state)
-        except Exception as exc:
-            state.errors.append({"phase": "collect", "error": str(exc)})
-            state.add_message("Coordinator", "log", "ERROR", {"phase": "collect", "error": str(exc)})
-            print(f"  ✗ Collector-Fehler: {exc}")
-            return state
+        if state.posts:
+            # Posts already provided (e.g. Query Mode) — skip collection
+            _notify("collect", f"{len(state.posts)} Posts vorhanden — Collect übersprungen")
+            print(f"\n{'─' * 65}\n Observe — Collector (übersprungen)\n{'─' * 65}")
+            print(f"  ↳ {len(state.posts)} Posts bereits vorhanden")
+            state.add_message("Collector", "Coordinator", "DATA_READY",
+                              {"n_posts": len(state.posts), "source": "pre_populated"})
+        else:
+            _notify("collect", "Daten sammeln...")
+            print(f"\n{'─' * 65}\n Observe — Collector\n{'─' * 65}")
+            try:
+                state = _collect_stateful(state)
+            except Exception as exc:
+                state.errors.append({"phase": "collect", "error": str(exc)})
+                state.add_message("Coordinator", "log", "ERROR", {"phase": "collect", "error": str(exc)})
+                print(f"  ✗ Collector-Fehler: {exc}")
+                return state
 
         if not state.posts:
             state.add_message("Coordinator", "log", "WARNING", {"msg": "Keine Posts gesammelt"})

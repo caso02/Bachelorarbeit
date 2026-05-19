@@ -76,6 +76,20 @@ results/run2_synthetic_edge/
 results/run3_ethics_stress/
 results/category_gap_comparison/
 
+# Thesis-spezifische Scripts (Diagramme, Figures)
+scripts/generate_architecture_diagram.py
+scripts/generate_architecture_variants.py
+scripts/generate_thesis_figures.py
+
+# Design-Docs (intern, nicht für Repo)
+docs/query_mode_design.md
+
+# LaTeX-Artefakte
+texput.log
+
+# LaTeX-Template (eigenes Repository / lokal)
+template_master_2025/
+
 # IDE
 .vscode/
 .idea/

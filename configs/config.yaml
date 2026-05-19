@@ -189,3 +189,9 @@ output:
   proto_cache_dir: "results/proto_cache"
 
 seed: 42
+
+# --- Query-Modus (Streamlit Discovery) ---
+query_mode:
+  corpus_index_path: "data/corpus_index/"
+  default_top_k: 200
+  default_min_similarity: 0.0
