@@ -64,7 +64,7 @@ Freitextliche Suchanfrage gegen einen vorberechneten Korpus-Index (97'500 Posts)
 │   ├── preprocess.py             # Textbereinigung
 │   ├── report.py                 # JSON/CSV/Markdown Reports
 │   └── utils.py                  # Shared Utilities (.env, JSON-Parsing, Client-Cache)
-├── tests/                        # 99 automatisierte Tests (pytest)
+├── tests/                        # 106 automatisierte Tests (pytest)
 ├── requirements.txt
 ├── .env.example                  # Template für Umgebungsvariablen
 └── README.md
@@ -136,7 +136,7 @@ python scripts/run_pipeline.py --config configs/config.yaml
 
 ```bash
 python -m pytest tests/ -v
-# 99 Tests in 7 Testdateien
+# 106 Tests in 7 Testdateien
 ```
 
 ## Datenquellen (Prioritäts-Fallback)
@@ -175,4 +175,4 @@ Alle Parameter werden über `configs/config.yaml` gesteuert:
 - Label-Prototypen gecacht (`results/proto_cache/`)
 - Korpus-Index mit Manifest (Modell, Dimensionalität, Hash, Timestamp)
 - Fester Random Seed (42) für Clustering und t-SNE
-- 99 automatisierte Tests als Regressionssicherung
+- 106 automatisierte Tests als Regressionssicherung

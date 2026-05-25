@@ -86,6 +86,9 @@ docs/
 
 # LaTeX-Artefakte
 texput.log
+thesis.bbl
+thesis.blg
+results/figures_thesis/
 
 # LaTeX-Template (eigenes Repository / lokal)
 template_master_2025/
