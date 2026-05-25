@@ -86,6 +86,15 @@ pip install -r requirements.txt
 cp .env.example .env
 # .env editieren: GOOGLE_API_KEY eintragen (Pflicht)
 # Optional: REDDIT_CLIENT_ID, REDDIT_CLIENT_SECRET für Live-Daten
+
+# 4. Kaggle-Datensätze herunterladen (empfohlen)
+# Datensatz 1 (50 Subreddit CSVs): https://www.kaggle.com/datasets/sachinkanchan92/reddit-top-posts-50-subreddit-analysis-2011-2024
+# → ZIP entpacken → alle 50 CSVs nach data/kaggle/ kopieren
+#
+# Datensatz 2 (Reddit Self-Posts): https://www.kaggle.com/datasets/mswarbrickjones/reddit-selfposts
+# → rspct.tsv nach data/kaggle_neu/ kopieren
+#
+# Ohne Kaggle-Daten nutzt das System automatisch den Mock-Fallback (401 Posts).
 ```
 
 ## Quickstart
